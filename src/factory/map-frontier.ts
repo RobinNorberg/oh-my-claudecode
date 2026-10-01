@@ -35,6 +35,8 @@ export interface TicketRecord {
   assignees: number;
   /** Raw issue body (the tolerantly-parsed source of edges, order, criteria). */
   body: string;
+  /** Issue title, when the tracker read carried it (story materialization). */
+  title?: string;
   /** Native parent issue number, when the tracker relation is set. */
   nativeParent?: number | null;
   /** Native blocker issue numbers, when the tracker relation is set. */
