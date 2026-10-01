@@ -37,7 +37,7 @@ import {
   type CommandBaseline,
 } from '../../hooks/ralph/feedback-baseline.js';
 import { readPrd } from '../../hooks/ralph/prd.js';
-import { loadMapRecords, parseMapRef, planFromMap, renderMapPlan } from '../../factory/map-ingest.js';
+import { executePlanActions, loadMapRecords, parseMapRef, planFromMap, renderActionOutcomes, renderMapPlan } from '../../factory/map-ingest.js';
 import { defaultSpawnFn, factoryLinkArgv } from '../../hooks/session-end/spawn-next.js';
 import { MAX_VERIFY_COMMANDS, MAX_VERIFY_COMMAND_LENGTH, VERIFY_COMMAND_PATTERN } from '../../hooks/session-end/routing.js';
 
@@ -196,15 +196,16 @@ Examples:
     .description('Plan a ralph run from a wayfinder map’s frontier (tracker-only; writes nothing in this mode)')
     .option('--map <repo#number>', 'Map issue reference, e.g. owner/repo#46 (repo defaults to the current repository)')
     .option('--repo <name>', 'Repository override when --map carries only a number')
-    .option('--dry-run', 'Explicitly assert the no-write behavior (the only mode today)')
+    .option('--execute', 'Act on the plan: claim auto tickets (with provenance), route human gates, draft criteria for criteria-less tickets and stop for human acceptance')
     .option('--json', 'Output the plan as JSON')
     .addHelpText('after', `
 Examples:
-  $ omc ralph from-map --map owner/repo#46            Plan the map's frontier
-  $ omc ralph from-map --map 46 --repo owner/repo      Same, with explicit repo
-  Human-gated tickets (grilling, prototype, bare task) are listed, never
-  offered for auto-run; claiming and write-back land with the claim phase.`)
-    .action((options: { map?: string; repo?: string; json?: boolean }) => {
+  $ omc ralph from-map --map owner/repo#46             Plan the map's frontier (writes nothing)
+  $ omc ralph from-map --map 46 --repo owner/repo --execute   Act on the plan
+  Human-gated tickets (grilling, prototype, bare task) are routed to the
+  human and NEVER claimed; a criteria-less ticket stops the run until a
+  human edits and accepts its drafted criteria.`)
+    .action((options: { map?: string; repo?: string; execute?: boolean; json?: boolean }) => {
       if (!options.map) {
         console.error('omc ralph from-map: --map <repo#number> is required');
         process.exitCode = 1;
@@ -217,8 +218,19 @@ Examples:
         return;
       }
       const plan = planFromMap(ref, loadMapRecords(ref));
-      if (options.json) console.log(JSON.stringify(plan, null, 2));
-      else console.log(renderMapPlan(plan));
+      if (!options.execute) {
+        if (options.json) console.log(JSON.stringify(plan, null, 2));
+        else console.log(renderMapPlan(plan));
+        return;
+      }
+      const outcomes = executePlanActions(plan, {
+        provenance: { sessionId: randomUUID(), mode: 'hitl', at: new Date().toISOString() },
+      });
+      if (options.json) console.log(JSON.stringify({ plan, outcomes }, null, 2));
+      else {
+        console.log(renderMapPlan(plan));
+        console.log(renderActionOutcomes(outcomes));
+      }
     });
 
   return cmd;
