@@ -755,12 +755,14 @@ export async function scaleUpOwned(
       const routedPair = canonical && hasExplicitOwnedRole && (hasConfiguredRoute || workerAgentType === 'claude')
         ? resolvedRoute
         : undefined;
+      let workerReasoningEffort: string | undefined;
       if (routedPair) {
         const { primary } = routedPair;
         const primaryProvider = primary.provider as CliAgentType;
         if (CLI_AGENT_TYPES.has(primaryProvider)) {
           workerAgentType = primaryProvider;
           workerModel = primary.model;
+          workerReasoningEffort = primary.reasoningEffort;
         }
         if (!workerModel) {
           const modelEnv = workerAgentType === 'claude' || config.external_models_defaults === undefined ? env : {};
@@ -809,6 +811,7 @@ export async function scaleUpOwned(
           cwd: workerCwd,
           resolvedBinaryPath: launchBinary,
           ...(workerModel ? { model: workerModel } : {}),
+          ...(workerReasoningEffort ? { reasoningEffort: workerReasoningEffort } : {}),
         });
         launchArgs = args;
       } catch (error) {
