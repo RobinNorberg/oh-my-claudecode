@@ -37,6 +37,7 @@ import {
   type CommandBaseline,
 } from '../../hooks/ralph/feedback-baseline.js';
 import { readPrd } from '../../hooks/ralph/prd.js';
+import { loadMapRecords, parseMapRef, planFromMap, renderMapPlan } from '../../factory/map-ingest.js';
 import { defaultSpawnFn, factoryLinkArgv } from '../../hooks/session-end/spawn-next.js';
 import { MAX_VERIFY_COMMANDS, MAX_VERIFY_COMMAND_LENGTH, VERIFY_COMMAND_PATTERN } from '../../hooks/session-end/routing.js';
 
@@ -188,6 +189,36 @@ Examples:
   verify reports the current signatures as a baseline candidate and exits 0.`)
     .action((options: { json?: boolean; session?: string; writeBaseline?: boolean }) => {
       process.exitCode = ralphVerify(options);
+    });
+
+  cmd
+    .command('from-map')
+    .description('Plan a ralph run from a wayfinder map’s frontier (tracker-only; writes nothing in this mode)')
+    .option('--map <repo#number>', 'Map issue reference, e.g. owner/repo#46 (repo defaults to the current repository)')
+    .option('--repo <name>', 'Repository override when --map carries only a number')
+    .option('--dry-run', 'Explicitly assert the no-write behavior (the only mode today)')
+    .option('--json', 'Output the plan as JSON')
+    .addHelpText('after', `
+Examples:
+  $ omc ralph from-map --map owner/repo#46            Plan the map's frontier
+  $ omc ralph from-map --map 46 --repo owner/repo      Same, with explicit repo
+  Human-gated tickets (grilling, prototype, bare task) are listed, never
+  offered for auto-run; claiming and write-back land with the claim phase.`)
+    .action((options: { map?: string; repo?: string; json?: boolean }) => {
+      if (!options.map) {
+        console.error('omc ralph from-map: --map <repo#number> is required');
+        process.exitCode = 1;
+        return;
+      }
+      const ref = parseMapRef(options.map, options.repo);
+      if (!ref) {
+        console.error(`omc ralph from-map: could not parse map reference "${options.map}"`);
+        process.exitCode = 1;
+        return;
+      }
+      const plan = planFromMap(ref, loadMapRecords(ref));
+      if (options.json) console.log(JSON.stringify(plan, null, 2));
+      else console.log(renderMapPlan(plan));
     });
 
   return cmd;

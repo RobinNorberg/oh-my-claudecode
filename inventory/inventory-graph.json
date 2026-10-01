@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "e74b22cd34e0a8b9dd5ded87d1bf0db6ce1a38dd",
-    "sourceSha256": "794bf3c880a66c6534f78c44fd5cfdf8ca14d2de140c36674d511984039e752c",
+    "head": "c793ddbe86f357c61ee8fa583cbde6cb3c6cb69c",
+    "sourceSha256": "d0f3b2e74250ed0129735dc817433c43f7b73a0c21a0d883289ce4b9d0af6c1c",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "e74b22cd34e0a8b9dd5ded87d1bf0db6ce1a38dd",
-  "sourceSha256": "794bf3c880a66c6534f78c44fd5cfdf8ca14d2de140c36674d511984039e752c",
+  "head": "c793ddbe86f357c61ee8fa583cbde6cb3c6cb69c",
+  "sourceSha256": "d0f3b2e74250ed0129735dc817433c43f7b73a0c21a0d883289ce4b9d0af6c1c",
   "counts": {
     "public": {
       "skills": 47,
@@ -28,8 +28,8 @@
       "toolFiles": 61,
       "libFiles": 47,
       "templateHooks": 23,
-      "srcFiles": 1428,
-      "total": 1451
+      "srcFiles": 1430,
+      "total": 1453
     },
     "generated": {
       "distFiles": 5066,
@@ -36793,6 +36793,11 @@
         "path": "src/factory/__tests__/listener.test.ts"
       },
       {
+        "id": "src/factory/__tests__/map-frontier.test.ts",
+        "kind": "src",
+        "path": "src/factory/__tests__/map-frontier.test.ts"
+      },
+      {
         "id": "src/factory/__tests__/status.test.ts",
         "kind": "src",
         "path": "src/factory/__tests__/status.test.ts"
@@ -36801,6 +36806,11 @@
         "id": "src/factory/listener.ts",
         "kind": "src",
         "path": "src/factory/listener.ts"
+      },
+      {
+        "id": "src/factory/map-frontier.ts",
+        "kind": "src",
+        "path": "src/factory/map-frontier.ts"
       },
       {
         "id": "src/factory/status.ts",
@@ -54131,6 +54141,11 @@
       },
       {
         "from": "src/cli/commands/ralph.ts",
+        "to": "src/factory/map-ingest.ts",
+        "kind": "imports"
+      },
+      {
+        "from": "src/cli/commands/ralph.ts",
         "to": "src/features/builtin-skills/skills.ts",
         "kind": "imports"
       },
@@ -55178,6 +55193,21 @@
         "from": "src/factory/__tests__/listener.test.ts",
         "to": "src/lib/worktree-paths.ts",
         "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-frontier.test.ts",
+        "to": "external:vitest",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-frontier.test.ts",
+        "to": "src/factory/map-frontier.ts",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-frontier.test.ts",
+        "to": "src/factory/map-frontier.ts",
+        "kind": "type-imports"
       },
       {
         "from": "src/factory/__tests__/status.test.ts",
@@ -83206,12 +83236,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7136,
-      "edgeCount": 8196,
-      "importEdgeCount": 6776,
+      "nodeCount": 7138,
+      "edgeCount": 8200,
+      "importEdgeCount": 6779,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "22877059424c133590a79746788b8397ed7349e005a636cd24546faea841ede0",
-  "manifestSha256": "af75edda7ed9340992c93989ad18fc563e3b92a01c9b75cf4f512e11ca644a33"
+  "inventorySha256": "1d5c1083f479246ba86d93e190544e677ff57fc196a9fd3f07e0550b64b7ed0b",
+  "manifestSha256": "3fdd4aee470de24125c0abb576637e24661d4ecd8971cd7cd73a55421ae83d16"
 }
