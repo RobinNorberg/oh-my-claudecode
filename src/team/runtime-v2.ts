@@ -4087,14 +4087,14 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
     const taskIndex = startupByWorker.get(workerName);
     const fallbackAgent = (agentTypes[i % agentTypes.length] ?? agentTypes[0] ?? 'claude') as CliAgentType;
     const resolvedAssignment = taskIndex === undefined
-      ? { agentType: fallbackAgent, model: '', role: undefined }
+      ? { agentType: fallbackAgent, model: '', reasoningEffort: undefined, role: undefined }
       : resolveTaskAssignment(config.tasks[taskIndex]!, resolvedRouting,
         pluginCfg.team?.roleRouting as Partial<Record<CanonicalTeamRole, TeamRoleAssignmentSpec>> | undefined,
         fallbackAgent);
     const assignment: StartupAssignment = {
       agentType: resolvedAssignment.agentType,
       model: resolvedAssignment.model || resolveDefaultModel(resolvedAssignment.agentType),
-      reasoningEffort: (resolvedAssignment as { reasoningEffort?: string }).reasoningEffort,
+      reasoningEffort: resolvedAssignment.reasoningEffort,
       ...(resolvedAssignment.role ? { role: resolvedAssignment.role } : {}),
     };
     startupAssignments.set(workerName, assignment);

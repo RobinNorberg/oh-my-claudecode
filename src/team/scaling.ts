@@ -848,7 +848,7 @@ export async function scaleUpOwned(
 
       // Rebuild env using the final agentType (fallback may have swapped it).
       const extraEnv: Record<string, string> = {
-        ...getModelWorkerEnv(sanitized, workerName, workerAgentType, env),
+        ...getModelWorkerEnv(sanitized, workerName, workerAgentType, env, canonical && hasExplicitOwnedRole ? canonical : undefined),
         OMC_TEAM_STATE_ROOT: teamStateRoot,
         OMC_TEAM_LEADER_CWD: leaderCwd,
         ...(worktree ? { OMC_TEAM_WORKTREE_PATH: worktree.path, OMC_TEAM_WORKER_CWD: workerCwd } : {}),

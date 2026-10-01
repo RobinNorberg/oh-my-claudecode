@@ -516,12 +516,10 @@ const KNOWN_AGENT_NAME_SET = new Set<string>(KNOWN_AGENT_NAMES);
 // /team CLI workers — codex/gemini/grok/cursor here are CLI integrations, NOT the deprecated MCP delegationRouting providers.
 const TEAM_ROLE_PROVIDERS = new Set(["claude", "codex", "gemini", "grok", "cursor", "antigravity"]);
 const TEAM_ROLE_TIERS = new Set(["HIGH", "MEDIUM", "LOW"]);
+// Only providers whose CLI has a verified effort flag (see model-contract.ts buildLaunchArgs).
 const REASONING_EFFORT_BY_PROVIDER: Record<string, Set<string>> = {
   claude: new Set(["low", "medium", "high", "xhigh", "max"]),
   codex: new Set(["low", "medium", "high", "xhigh", "max", "ultra"]),
-  gemini: new Set(["low", "medium", "high", "xhigh", "max"]),
-  grok: new Set(["low", "medium", "high", "xhigh", "max"]),
-  cursor: new Set(["low", "medium", "high", "xhigh", "max"]),
   antigravity: new Set(["low", "medium", "high", "max"]),
 };
 
@@ -620,7 +618,7 @@ export function validateTeamConfig(config: PluginConfig): void {
       }
       const allowedForProvider = REASONING_EFFORT_BY_PROVIDER[provider];
       if (!allowedForProvider || !allowedForProvider.has(spec.reasoningEffort)) {
-        const allowed = allowedForProvider ? [...allowedForProvider].join("|"): "(none)";
+        const allowed = allowedForProvider ? [...allowedForProvider].join("|") : "(not supported for this provider)";
         throw new Error(
           `[OMC] team.roleRouting.${rawRoleKey}.reasoningEffort: invalid value "${spec.reasoningEffort}" for provider "${provider}". Allowed: ${allowed}`,
         );

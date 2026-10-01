@@ -254,9 +254,6 @@ const CONTRACTS: Record<CliAgentType, CliAgentContract> = {
     buildLaunchArgs(model?: string, reasoningEffort?: string, extraFlags: string[] = []): string[] {
       const args = ['--approval-mode', 'yolo'];
       if (model) args.push('--model', model);
-      if (reasoningEffort) {
-        args.push('--effort', reasoningEffort);
-      }
       return [...args, ...extraFlags];
     },
     parseOutput(rawOutput: string): string {
@@ -272,9 +269,6 @@ const CONTRACTS: Record<CliAgentType, CliAgentContract> = {
     buildLaunchArgs(model?: string, reasoningEffort?: string, extraFlags: string[] = []): string[] {
       const args = ['--always-approve'];
       if (model) args.push('--model', model);
-      if (reasoningEffort) {
-        args.push('--effort', reasoningEffort);
-      }
       return [...args, ...extraFlags];
     },
     parseOutput(rawOutput: string): string {
@@ -324,9 +318,6 @@ const CONTRACTS: Record<CliAgentType, CliAgentContract> = {
       // `--model <id>` is a documented global option; ids come from
       // `cursor-agent --list-models` (e.g. cursor-grok-4.6-high, composer-2.5).
       if (model) args.push('--model', model);
-      if (reasoningEffort) {
-        args.push('--effort', reasoningEffort);
-      }
       return [...args, ...extra];
     },
     parseOutput(rawOutput: string): string {

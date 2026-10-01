@@ -485,30 +485,18 @@ describe('model-contract', () => {
       expect(args).toContain('model_reasoning_effort="ultra"');
     });
     
-    it('gemini includes --effort when reasoningEffort is provided', () => {
-      const args = buildLaunchArgs('gemini', { teamName: 't', workerName: 'w', cwd: '/tmp', reasoningEffort: 'high' });
-      expect(args).toContain('--effort');
-      expect(args).toContain('high');
-    });
-    
-    it('grok includes --effort when reasoningEffort is provided', () => {
-      const args = buildLaunchArgs('grok', { teamName: 't', workerName: 'w', cwd: '/tmp', reasoningEffort: 'high' });
-      expect(args).toContain('--effort');
-      expect(args).toContain('high');
-    });
-    
     it('antigravity includes --effort when reasoningEffort is provided', () => {
       const args = buildLaunchArgs('antigravity', { teamName: 't', workerName: 'w', cwd: '/tmp', reasoningEffort: 'medium' });
       expect(args).toContain('--effort');
       expect(args).toContain('medium');
     });
     
-    it('cursor includes --effort when reasoningEffort is provided', () => {
-      const args = buildLaunchArgs('cursor', { teamName: 't', workerName: 'w', cwd: '/tmp', reasoningEffort: 'high' });
-      expect(args).toContain('--effort');
-      expect(args).toContain('high');
+    it.each(['gemini', 'grok', 'cursor'] as const)('%s ignores reasoningEffort (no verified CLI flag)', (agent) => {
+      const args = buildLaunchArgs(agent, { teamName: 't', workerName: 'w', cwd: '/tmp', reasoningEffort: 'high' });
+      expect(args).not.toContain('--effort');
+      expect(args.some((a) => a.includes('reasoning_effort'))).toBe(false);
     });
-    
+
     it('does not include reasoning effort flags when reasoningEffort is not provided', () => {
       const args = buildLaunchArgs('claude', { teamName: 't', workerName: 'w', cwd: '/tmp' });
       expect(args).not.toContain('--effort');

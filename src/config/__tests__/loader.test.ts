@@ -858,6 +858,28 @@ describe("team.roleRouting (Option E)", () => {
     }
   });
 
+  it.each(["gemini", "grok", "cursor"])("rejects reasoningEffort for %s (no verified CLI flag)", (provider) => {
+    const tempDir = mkdtempSync(join(tmpdir(), `omc-team-reasoning-effort-${provider}-`));
+    try {
+      const claudeDir = join(tempDir, ".claude");
+      require("node:fs").mkdirSync(claudeDir, { recursive: true });
+      writeFileSync(
+        join(claudeDir, "omc.jsonc"),
+        JSON.stringify({
+          team: {
+            roleRouting: {
+              executor: { provider, reasoningEffort: "high" },
+            },
+          },
+        }),
+      );
+      process.chdir(tempDir);
+      expect(() => loadConfig()).toThrow(/reasoningEffort.*not supported for this provider/);
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
   it("rejects reasoningEffort with non-string value", () => {
     const tempDir = mkdtempSync(join(tmpdir(), "omc-team-reasoning-effort-non-string-"));
     try {
