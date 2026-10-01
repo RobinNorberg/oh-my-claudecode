@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "004fb375931428105eea0f00ec5a3d6e56482ff1",
-    "sourceSha256": "44ce211dd35f3a703f849e87c3625b103dfd3ddd8fce4750870475c4a9f68b9f",
+    "head": "5e4f38eff4c7db262d7f835cb027b72af822ca65",
+    "sourceSha256": "2b2f187cccc6d39546f601c509c09d60e17cedddc3ad5973ea1edb44ced98918",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "004fb375931428105eea0f00ec5a3d6e56482ff1",
-  "sourceSha256": "44ce211dd35f3a703f849e87c3625b103dfd3ddd8fce4750870475c4a9f68b9f",
+  "head": "5e4f38eff4c7db262d7f835cb027b72af822ca65",
+  "sourceSha256": "2b2f187cccc6d39546f601c509c09d60e17cedddc3ad5973ea1edb44ced98918",
   "counts": {
     "public": {
       "skills": 47,
@@ -28,8 +28,8 @@
       "toolFiles": 61,
       "libFiles": 47,
       "templateHooks": 23,
-      "srcFiles": 1432,
-      "total": 1455
+      "srcFiles": 1434,
+      "total": 1457
     },
     "generated": {
       "distFiles": 5066,
@@ -36803,6 +36803,11 @@
         "path": "src/factory/__tests__/map-ingest.test.ts"
       },
       {
+        "id": "src/factory/__tests__/map-run.test.ts",
+        "kind": "src",
+        "path": "src/factory/__tests__/map-run.test.ts"
+      },
+      {
         "id": "src/factory/__tests__/status.test.ts",
         "kind": "src",
         "path": "src/factory/__tests__/status.test.ts"
@@ -36821,6 +36826,11 @@
         "id": "src/factory/map-ingest.ts",
         "kind": "src",
         "path": "src/factory/map-ingest.ts"
+      },
+      {
+        "id": "src/factory/map-run.ts",
+        "kind": "src",
+        "path": "src/factory/map-run.ts"
       },
       {
         "id": "src/factory/status.ts",
@@ -55250,6 +55260,51 @@
         "kind": "type-imports"
       },
       {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "external:child_process",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "external:fs",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "external:os",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "external:path",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "external:vitest",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "src/factory/map-frontier.ts",
+        "kind": "type-imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "src/factory/map-ingest.ts",
+        "kind": "type-imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "src/factory/map-run.ts",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/__tests__/map-run.test.ts",
+        "to": "src/hooks/ralph/prd.ts",
+        "kind": "imports"
+      },
+      {
         "from": "src/factory/__tests__/status.test.ts",
         "to": "external:child_process",
         "kind": "imports"
@@ -55358,6 +55413,56 @@
         "from": "src/factory/map-ingest.ts",
         "to": "src/factory/map-frontier.ts",
         "kind": "type-imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "external:child_process",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "external:fs",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "external:os",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "external:path",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "src/factory/map-frontier.ts",
+        "kind": "type-imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "src/factory/map-ingest.ts",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "src/factory/map-ingest.ts",
+        "kind": "type-imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "src/hooks/ralph/prd.ts",
+        "kind": "imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "src/hooks/ralph/prd.ts",
+        "kind": "type-imports"
+      },
+      {
+        "from": "src/factory/map-run.ts",
+        "to": "src/lib/worktree-paths.ts",
+        "kind": "imports"
       },
       {
         "from": "src/factory/status.ts",
@@ -83291,12 +83396,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7140,
-      "edgeCount": 8209,
-      "importEdgeCount": 6785,
+      "nodeCount": 7142,
+      "edgeCount": 8228,
+      "importEdgeCount": 6799,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "2aa84ec62819d99fe02f61c9942836b8dbf05514af8780a1e25e5c8cb3c07b5a",
-  "manifestSha256": "e21d27f89320841a7a7740b232744a7b132d22552eee3ec11222286c38d51a5a"
+  "inventorySha256": "f15bde95f8b9316ea62655c806fea607dc74db7cecf484c000a503d7e5d5cf13",
+  "manifestSha256": "c5522b17b12691452792ddcff436b8a20c71da14667c66d17c55f0b37e7797b9"
 }

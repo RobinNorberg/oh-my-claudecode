@@ -12,6 +12,7 @@ import { execFileSync } from 'child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
+import { getOmcRoot } from '../lib/worktree-paths.js';
 import {
   defaultCommentRunner,
   defaultGhRunner,
@@ -170,7 +171,7 @@ export interface MapRunSidecar {
 }
 
 function sessionDir(directory: string, sessionId: string): string {
-  return join(directory, '.omc', 'state', 'sessions', sessionId);
+  return join(getOmcRoot(directory), 'state', 'sessions', sessionId);
 }
 
 function writeMapRunSidecar(directory: string, sessionId: string, map: MapRef, stories: readonly MapStory[]): void {
