@@ -1921,15 +1921,28 @@ async function main() {
     }
 
     // Resolve conflicts
-    const resolved = resolveConflicts(uniqueMatches);
+    let resolved = resolveConflicts(uniqueMatches);
 
     if (isJevShadowOptedIn('skill-trigger')) {
-      recordJevShadow({
+      const jevResult = recordJevShadow({
         point: 'skill-trigger',
         state: { prompt: cleanPrompt, source: 'user-prompt-submit' },
         questions: SKILL_TRIGGER_QUESTIONS,
         heuristic: resolved.map((match) => match.name),
       });
+      
+      // In active mode, use Jev's skill choice
+      if (jevResult && jevResult.mode === 'active' && jevResult.source === 'jev' && jevResult.answer) {
+        const jevChoice = jevResult.answer.choice?.toLowerCase();
+        if (jevChoice && jevChoice !== 'none') {
+          // Override with Jev's chosen skill
+          const matchedKeyword = uniqueMatches.find((m) => m.name === jevChoice);
+          resolved = matchedKeyword ? [matchedKeyword] : resolved;
+        } else if (jevChoice === 'none') {
+          // Jev says no trigger
+          resolved = [];
+        }
+      }
     }
     if (isJevShadowOptedIn('intent')) {
       recordJevShadow({

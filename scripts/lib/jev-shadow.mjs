@@ -5,10 +5,10 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
- * Mirror the resolver's key, master-off, point, wildcard, and :active gates.
- * Returns 'off' | 'shadow' | 'active'.
+ * Get the Jev mode for a point: 'off' | 'shadow' | 'active'.
+ * Mirrors the resolver's config gates and activation logic.
  */
-export function isJevShadowOptedIn(point, env = process.env) {
+export function jevModeFor(point, env = process.env) {
   const raw = (env.OMC_JEV || '').trim();
   if (!env.TYPESAFE_API_KEY || raw === 'off') return 'off';
 
@@ -26,11 +26,22 @@ export function isJevShadowOptedIn(point, env = process.env) {
 }
 
 /**
- * Fire-and-record one script-side judgment without affecting its caller.
- * Returns immediately (fire-and-forget for shadow, or active result for active mode).
+ * Check if Jev is opted in for a point (shadow or active, not off).
+ * Backward-compatible boolean API for existing callers.
+ */
+export function isJevShadowOptedIn(point, env = process.env) {
+  return jevModeFor(point, env) !== 'off';
+}
+
+/**
+ * Fire-and-record one script-side judgment.
+ * - Shadow mode: fire-and-forget, returns undefined immediately
+ * - Active mode: waits (sync) for Jev answer, returns { mode, answer, source, ... }
+ * - Off mode: returns undefined
+ * Falls back to undefined (caller uses heuristic) on timeout/error/parse-failure.
  */
 export function recordJevShadow({ point, state, questions, heuristic }) {
-  const mode = isJevShadowOptedIn(point);
+  const mode = jevModeFor(point);
   if (mode === 'off') return undefined;
 
   try {
