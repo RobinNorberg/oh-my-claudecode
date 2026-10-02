@@ -3,26 +3,14 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseJevEnv } from '../jev-resolve.mjs';
 
 /**
  * Get the Jev mode for a point: 'off' | 'shadow' | 'active'.
- * Mirrors the resolver's config gates and activation logic.
+ * Reuses the script resolver's config gates and union activation semantics.
  */
 export function jevModeFor(point, env = process.env) {
-  const raw = (env.OMC_JEV || '').trim();
-  if (!env.TYPESAFE_API_KEY || raw === 'off') return 'off';
-
-  for (const entry of raw.split(',')) {
-    const token = entry.trim();
-    if (!token) continue;
-    const colon = token.lastIndexOf(':');
-    const name = colon === -1 ? token : token.slice(0, colon);
-    const isActive = colon !== -1 && token.slice(colon + 1) === 'active';
-    if (name === 'all' || name === point) {
-      return isActive ? 'active' : 'shadow';
-    }
-  }
-  return 'off';
+  return parseJevEnv(point, env);
 }
 
 /**

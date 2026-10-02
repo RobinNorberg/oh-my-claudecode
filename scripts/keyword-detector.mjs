@@ -1932,7 +1932,7 @@ async function main() {
       });
       
       // In active mode, use Jev's skill choice
-      if (jevResult && jevResult.mode === 'active' && jevResult.source === 'jev' && jevResult.answer) {
+      if (jevResult && jevResult.mode === 'active' && jevResult.answer) {
         const jevChoice = jevResult.answer.choice?.toLowerCase();
         if (jevChoice && jevChoice !== 'none') {
           // Override with Jev's chosen skill
