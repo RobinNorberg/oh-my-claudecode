@@ -73,6 +73,59 @@ async function readLog(): Promise<string> {
   return readFile(join(logDir, 'shadow.jsonl'), 'utf8');
 }
 
+describe('resolver non-blocking active wait', () => {
+  it('non-blocking point in active mode waits for Jev answer', async () => {
+    process.env.TYPESAFE_API_KEY = 'test-key';
+    process.env.OMC_JEV = 'task-size:active';
+    const { fetchFn } = captureFetch(() => jevOk({ choice: 'large' }));
+    
+    const result = await recordJudgment<any>('task-size', {
+      state: { prompt: 'test', source: 'test' },
+      twin: () => ({ size: 'small', reason: 'heuristic', wordCount: 10, hasEscapeHatch: false }),
+      mapAnswer: (answer) => ({
+        size: (answer.choice as string | undefined)?.toLowerCase() ?? 'medium',
+        reason: 'jev',
+        wordCount: 0,
+        hasEscapeHatch: false,
+      }),
+      fetchFn,
+    });
+    
+    // Non-blocking active: should wait for Jev and use answer
+    expect(result.mode).toBe('active');
+    expect(result.source).toBe('jev');
+    expect(result.answer.size).toBe('large');
+    
+    // Shadow log should be written
+    const line = JSON.parse(await readLog());
+    expect(line.mode).toBe('active');
+  });
+
+  it('non-blocking active with timeout falls back to twin', async () => {
+    process.env.TYPESAFE_API_KEY = 'test-key';
+    process.env.OMC_JEV = 'task-size:active';
+    process.env.OMC_JEV_TIMEOUT_MS = '20';
+    const fetchFn = (async () => new Promise<Response>(() => {})) as unknown as typeof fetch;
+    
+    const result = await recordJudgment<any>('task-size', {
+      state: { prompt: 'test', source: 'test' },
+      twin: () => ({ size: 'small', reason: 'heuristic', wordCount: 10, hasEscapeHatch: false }),
+      mapAnswer: (answer) => ({
+        size: (answer.choice as string | undefined)?.toLowerCase() ?? 'medium',
+        reason: 'jev',
+        wordCount: 0,
+        hasEscapeHatch: false,
+      }),
+      fetchFn,
+    });
+    
+    // Degraded: should fall back to twin
+    expect(result.mode).toBe('degraded');
+    expect(result.source).toBe('twin');
+    expect(result.answer.size).toBe('small');
+  });
+});
+
 describe('active mode integration', () => {
   it('task-size: active mode uses Jev choice over the heuristic', async () => {
     process.env.TYPESAFE_API_KEY = 'test-key';
