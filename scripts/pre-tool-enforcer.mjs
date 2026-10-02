@@ -631,7 +631,7 @@ function recordModelRoutingShadow(toolName, toolInput, updatedToolInput) {
   });
   
   // In active mode with valid answer, update the toolInput model to Jev's choice
-  if (jevResult && jevResult.mode === 'active' && jevResult.source === 'jev' && jevResult.answer) {
+  if (jevResult && jevResult.mode === 'active' && jevResult.answer) {
     const jevChoice = jevResult.answer.choice?.toLowerCase();
     if (jevChoice && ['haiku', 'sonnet', 'opus'].includes(jevChoice)) {
       // Jev says use this tier; update the tool input
