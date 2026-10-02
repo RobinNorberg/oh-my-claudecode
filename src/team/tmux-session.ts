@@ -199,6 +199,13 @@ function buildTmuxServerIdentity(
 ): TmuxServerIdentity | null {
   const processStartedAt = processIdentity(pid);
   if (!processStartedAt || !isValidStrictProcessStartIdentity(processStartedAt)) return null;
+  if (process.platform === 'win32') {
+    try {
+      process.kill(pid, 0);
+    } catch {
+      return null;
+    }
+  }
   const identity: TmuxServerIdentity = {
     socket_path: socketPath,
     server_pid: pid,
@@ -286,17 +293,26 @@ export async function observeTmuxServerIdentity(
   if (!isValidTmuxServerIdentity(expected)
     || !isValidStrictProcessStartIdentity(expected.process_started_at)) return 'unknown';
 
-  let processState: ProcessIdentityObservation;
-  try {
-    processState = deps.processObservation({
-      server_pid: expected.server_pid,
-      process_started_at: expected.process_started_at,
-    });
-  } catch {
-    return 'unknown';
+  const singleWindowsProbe = process.platform === 'win32' && dependencies.processObservation === undefined;
+  if (singleWindowsProbe) {
+    try {
+      process.kill(expected.server_pid, 0);
+    } catch (error) {
+      return (error as NodeJS.ErrnoException).code === 'ESRCH' ? 'dead' : 'unknown';
+    }
+  } else {
+    let processState: ProcessIdentityObservation;
+    try {
+      processState = deps.processObservation({
+        server_pid: expected.server_pid,
+        process_started_at: expected.process_started_at,
+      });
+    } catch {
+      return 'unknown';
+    }
+    if (processState === 'dead') return 'dead';
+    if (processState !== 'matching') return 'unknown';
   }
-  if (processState === 'dead') return 'dead';
-  if (processState !== 'matching') return 'unknown';
 
   try {
     const result = await deps.tmuxQuery(
@@ -309,7 +325,17 @@ export async function observeTmuxServerIdentity(
     const actualPid = parseExactPositivePid(lines[0]!);
     if (actualPid !== expected.server_pid) return 'unknown';
     const actualStart = deps.processIdentity(actualPid);
+    if (singleWindowsProbe && actualStart
+      && isValidStrictProcessStartIdentity(actualStart)
+      && actualStart !== expected.process_started_at) return 'dead';
     if (!actualStart || actualStart !== expected.process_started_at) return 'unknown';
+    if (singleWindowsProbe) {
+      try {
+        process.kill(actualPid, 0);
+      } catch (error) {
+        return (error as NodeJS.ErrnoException).code === 'ESRCH' ? 'dead' : 'unknown';
+      }
+    }
     return 'matching';
   } catch {
     // A query failure alone cannot prove that the recorded process died.
