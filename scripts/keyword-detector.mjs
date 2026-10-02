@@ -1945,22 +1945,26 @@ async function main() {
       }
     }
     if (isJevShadowOptedIn('intent')) {
-      recordJevShadow({
+      const jevResult = recordJevShadow({
         point: 'intent',
         state: { prompt: cleanPrompt, mode_name: 'intent' },
         questions: INTENT_QUESTIONS,
         heuristic: INTENT_SLASH_PATTERN.test(cleanPrompt),
       });
+      // In active mode, intent Jev answer could be used here if needed
+      // Currently logging-only: resolved keywords come from skill-trigger
     }
     if (isJevShadowOptedIn('task-size')) {
       try {
         const { classifyTaskSize } = await import('../dist/hooks/task-size-detector/index.js');
-        recordJevShadow({
+        const jevResult = recordJevShadow({
           point: 'task-size',
           state: { prompt: cleanPrompt, source: 'user-prompt-submit' },
           questions: TASK_SIZE_QUESTIONS,
           heuristic: classifyTaskSize(cleanPrompt),
         });
+        // In active mode, task-size Jev answer could be used here if needed
+        // Currently logging-only: task sizing is handled on TypeScript side
       } catch {
         // The compiled twin is optional for script-only installs; never affect prompt handling.
       }
