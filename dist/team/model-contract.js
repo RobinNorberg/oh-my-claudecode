@@ -412,6 +412,10 @@ const WORKER_MODEL_ENV_ALLOWLIST = [
     'OMC_EXTERNAL_MODELS_DEFAULT_ANTIGRAVITY_MODEL',
     'OMC_ANTIGRAVITY_DEFAULT_MODEL',
 ];
+const CLAUDE_WORKER_ENV_ALLOWLIST = [
+    'CLAUDE_CONFIG_DIR',
+    'CLAUDE_CODE_EFFORT_LEVEL',
+];
 export function getWorkerEnv(teamName, workerName, agentType, env = process.env) {
     validateTeamName(teamName);
     const workerEnv = {
@@ -423,6 +427,14 @@ export function getWorkerEnv(teamName, workerName, agentType, env = process.env)
         const value = env[key];
         if (typeof value === 'string' && value.length > 0) {
             workerEnv[key] = value;
+        }
+    }
+    if (agentType === 'claude') {
+        for (const key of CLAUDE_WORKER_ENV_ALLOWLIST) {
+            const value = env[key];
+            if (typeof value === 'string' && value.length > 0) {
+                workerEnv[key] = value;
+            }
         }
     }
     return workerEnv;

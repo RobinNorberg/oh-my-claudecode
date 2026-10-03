@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "b68b8534ce1a3b4f618f05b5693a5f70026d81f0",
-    "sourceSha256": "5dde41c7adec1c2c02ae11bdb72d10c7d5d748acff66aecd28ed41ffcdc88cca",
+    "head": "795308259ba12cef67444b1ee32bcb57ebed6297",
+    "sourceSha256": "9b9e5adb539a2d4f4c95755c624a3f8e5244a8a73978f142e63d3c64edc3da83",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "b68b8534ce1a3b4f618f05b5693a5f70026d81f0",
-  "sourceSha256": "5dde41c7adec1c2c02ae11bdb72d10c7d5d748acff66aecd28ed41ffcdc88cca",
+  "head": "795308259ba12cef67444b1ee32bcb57ebed6297",
+  "sourceSha256": "9b9e5adb539a2d4f4c95755c624a3f8e5244a8a73978f142e63d3c64edc3da83",
   "counts": {
     "public": {
       "skills": 47,
@@ -32,9 +32,9 @@
       "total": 1458
     },
     "generated": {
-      "distFiles": 5066,
+      "distFiles": 5096,
       "bridgeFiles": 9,
-      "total": 5075
+      "total": 5105
     },
     "prompt": {
       "promptLikeFiles": 61
@@ -2284,6 +2284,12 @@
       "dist/cli/commands/doctor-team-routing.d.ts.map",
       "dist/cli/commands/doctor-team-routing.js",
       "dist/cli/commands/doctor-team-routing.js.map",
+      "dist/cli/commands/factory.d.ts",
+      "dist/cli/commands/factory.js",
+      "dist/cli/commands/intake.d.ts",
+      "dist/cli/commands/intake.js",
+      "dist/cli/commands/ralph.d.ts",
+      "dist/cli/commands/ralph.js",
       "dist/cli/commands/ralphthon.d.ts",
       "dist/cli/commands/ralphthon.d.ts.map",
       "dist/cli/commands/ralphthon.js",
@@ -2399,6 +2405,13 @@
       "dist/constants/names.d.ts.map",
       "dist/constants/names.js",
       "dist/constants/names.js.map",
+      "dist/factory/listener.d.ts",
+      "dist/factory/listener.js",
+      "dist/factory/status.d.ts",
+      "dist/factory/status.js",
+      "dist/factory/watchdog.d.ts",
+      "dist/factory/watchdog.js",
+      "dist/factory/watchdog.test.d.ts",
       "dist/features/__tests__/magic-keywords.test.d.ts",
       "dist/features/__tests__/magic-keywords.test.d.ts.map",
       "dist/features/__tests__/magic-keywords.test.js",
@@ -3509,6 +3522,8 @@
       "dist/hooks/prompt-prerequisites/index.d.ts.map",
       "dist/hooks/prompt-prerequisites/index.js",
       "dist/hooks/prompt-prerequisites/index.js.map",
+      "dist/hooks/ralph/feedback-baseline.d.ts",
+      "dist/hooks/ralph/feedback-baseline.js",
       "dist/hooks/ralph/index.d.ts",
       "dist/hooks/ralph/index.d.ts.map",
       "dist/hooks/ralph/index.js",
@@ -3627,6 +3642,7 @@
       "dist/hooks/rules-injector/matcher.d.ts.map",
       "dist/hooks/rules-injector/matcher.js",
       "dist/hooks/rules-injector/matcher.js.map",
+      "dist/hooks/rules-injector/matcher.test.d.ts",
       "dist/hooks/rules-injector/parser.d.ts",
       "dist/hooks/rules-injector/parser.d.ts.map",
       "dist/hooks/rules-injector/parser.js",
@@ -3711,6 +3727,10 @@
       "dist/hooks/session-end/callbacks.d.ts.map",
       "dist/hooks/session-end/callbacks.js",
       "dist/hooks/session-end/callbacks.js.map",
+      "dist/hooks/session-end/chain-enqueuer.d.ts",
+      "dist/hooks/session-end/chain-enqueuer.js",
+      "dist/hooks/session-end/check-evidence.d.ts",
+      "dist/hooks/session-end/check-evidence.js",
       "dist/hooks/session-end/cleanup-manifest.d.ts",
       "dist/hooks/session-end/cleanup-manifest.d.ts.map",
       "dist/hooks/session-end/cleanup-manifest.js",
@@ -3719,10 +3739,16 @@
       "dist/hooks/session-end/foreground-bootstrap.d.ts.map",
       "dist/hooks/session-end/foreground-bootstrap.js",
       "dist/hooks/session-end/foreground-bootstrap.js.map",
+      "dist/hooks/session-end/guardrails.d.ts",
+      "dist/hooks/session-end/guardrails.js",
       "dist/hooks/session-end/index.d.ts",
       "dist/hooks/session-end/index.d.ts.map",
       "dist/hooks/session-end/index.js",
       "dist/hooks/session-end/index.js.map",
+      "dist/hooks/session-end/routing.d.ts",
+      "dist/hooks/session-end/routing.js",
+      "dist/hooks/session-end/spawn-next.d.ts",
+      "dist/hooks/session-end/spawn-next.js",
       "dist/hooks/session-end/worker.d.ts",
       "dist/hooks/session-end/worker.d.ts.map",
       "dist/hooks/session-end/worker.js",
@@ -4361,6 +4387,8 @@
       "dist/lib/file-lock.d.ts.map",
       "dist/lib/file-lock.js",
       "dist/lib/file-lock.js.map",
+      "dist/lib/host-load-gate.d.ts",
+      "dist/lib/host-load-gate.js",
       "dist/lib/hud-wrapper-template.d.ts",
       "dist/lib/hud-wrapper-template.d.ts.map",
       "dist/lib/hud-wrapper-template.js",
@@ -4397,6 +4425,8 @@
       "dist/lib/release-generation.d.ts.map",
       "dist/lib/release-generation.js",
       "dist/lib/release-generation.js.map",
+      "dist/lib/runs-ledger.d.ts",
+      "dist/lib/runs-ledger.js",
       "dist/lib/security-config.d.ts",
       "dist/lib/security-config.d.ts.map",
       "dist/lib/security-config.js",
@@ -14360,6 +14390,36 @@
         "path": "dist/cli/commands/doctor-team-routing.js.map"
       },
       {
+        "id": "dist/cli/commands/factory.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/cli/commands/factory.d.ts"
+      },
+      {
+        "id": "dist/cli/commands/factory.js",
+        "kind": "generated-dist",
+        "path": "dist/cli/commands/factory.js"
+      },
+      {
+        "id": "dist/cli/commands/intake.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/cli/commands/intake.d.ts"
+      },
+      {
+        "id": "dist/cli/commands/intake.js",
+        "kind": "generated-dist",
+        "path": "dist/cli/commands/intake.js"
+      },
+      {
+        "id": "dist/cli/commands/ralph.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/cli/commands/ralph.d.ts"
+      },
+      {
+        "id": "dist/cli/commands/ralph.js",
+        "kind": "generated-dist",
+        "path": "dist/cli/commands/ralph.js"
+      },
+      {
         "id": "dist/cli/commands/ralphthon.d.ts",
         "kind": "generated-dist",
         "path": "dist/cli/commands/ralphthon.d.ts"
@@ -14933,6 +14993,41 @@
         "id": "dist/constants/names.js.map",
         "kind": "generated-dist",
         "path": "dist/constants/names.js.map"
+      },
+      {
+        "id": "dist/factory/listener.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/factory/listener.d.ts"
+      },
+      {
+        "id": "dist/factory/listener.js",
+        "kind": "generated-dist",
+        "path": "dist/factory/listener.js"
+      },
+      {
+        "id": "dist/factory/status.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/factory/status.d.ts"
+      },
+      {
+        "id": "dist/factory/status.js",
+        "kind": "generated-dist",
+        "path": "dist/factory/status.js"
+      },
+      {
+        "id": "dist/factory/watchdog.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/factory/watchdog.d.ts"
+      },
+      {
+        "id": "dist/factory/watchdog.js",
+        "kind": "generated-dist",
+        "path": "dist/factory/watchdog.js"
+      },
+      {
+        "id": "dist/factory/watchdog.test.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/factory/watchdog.test.d.ts"
       },
       {
         "id": "dist/features/__tests__/magic-keywords.test.d.ts",
@@ -20485,6 +20580,16 @@
         "path": "dist/hooks/prompt-prerequisites/index.js.map"
       },
       {
+        "id": "dist/hooks/ralph/feedback-baseline.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/ralph/feedback-baseline.d.ts"
+      },
+      {
+        "id": "dist/hooks/ralph/feedback-baseline.js",
+        "kind": "generated-dist",
+        "path": "dist/hooks/ralph/feedback-baseline.js"
+      },
+      {
         "id": "dist/hooks/ralph/index.d.ts",
         "kind": "generated-dist",
         "path": "dist/hooks/ralph/index.d.ts"
@@ -21075,6 +21180,11 @@
         "path": "dist/hooks/rules-injector/matcher.js.map"
       },
       {
+        "id": "dist/hooks/rules-injector/matcher.test.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/rules-injector/matcher.test.d.ts"
+      },
+      {
         "id": "dist/hooks/rules-injector/parser.d.ts",
         "kind": "generated-dist",
         "path": "dist/hooks/rules-injector/parser.d.ts"
@@ -21495,6 +21605,26 @@
         "path": "dist/hooks/session-end/callbacks.js.map"
       },
       {
+        "id": "dist/hooks/session-end/chain-enqueuer.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/chain-enqueuer.d.ts"
+      },
+      {
+        "id": "dist/hooks/session-end/chain-enqueuer.js",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/chain-enqueuer.js"
+      },
+      {
+        "id": "dist/hooks/session-end/check-evidence.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/check-evidence.d.ts"
+      },
+      {
+        "id": "dist/hooks/session-end/check-evidence.js",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/check-evidence.js"
+      },
+      {
         "id": "dist/hooks/session-end/cleanup-manifest.d.ts",
         "kind": "generated-dist",
         "path": "dist/hooks/session-end/cleanup-manifest.d.ts"
@@ -21535,6 +21665,16 @@
         "path": "dist/hooks/session-end/foreground-bootstrap.js.map"
       },
       {
+        "id": "dist/hooks/session-end/guardrails.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/guardrails.d.ts"
+      },
+      {
+        "id": "dist/hooks/session-end/guardrails.js",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/guardrails.js"
+      },
+      {
         "id": "dist/hooks/session-end/index.d.ts",
         "kind": "generated-dist",
         "path": "dist/hooks/session-end/index.d.ts"
@@ -21553,6 +21693,26 @@
         "id": "dist/hooks/session-end/index.js.map",
         "kind": "generated-dist",
         "path": "dist/hooks/session-end/index.js.map"
+      },
+      {
+        "id": "dist/hooks/session-end/routing.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/routing.d.ts"
+      },
+      {
+        "id": "dist/hooks/session-end/routing.js",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/routing.js"
+      },
+      {
+        "id": "dist/hooks/session-end/spawn-next.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/spawn-next.d.ts"
+      },
+      {
+        "id": "dist/hooks/session-end/spawn-next.js",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/spawn-next.js"
       },
       {
         "id": "dist/hooks/session-end/worker.d.ts",
@@ -24745,6 +24905,16 @@
         "path": "dist/lib/file-lock.js.map"
       },
       {
+        "id": "dist/lib/host-load-gate.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/lib/host-load-gate.d.ts"
+      },
+      {
+        "id": "dist/lib/host-load-gate.js",
+        "kind": "generated-dist",
+        "path": "dist/lib/host-load-gate.js"
+      },
+      {
         "id": "dist/lib/hud-wrapper-template.d.ts",
         "kind": "generated-dist",
         "path": "dist/lib/hud-wrapper-template.d.ts"
@@ -24923,6 +25093,16 @@
         "id": "dist/lib/release-generation.js.map",
         "kind": "generated-dist",
         "path": "dist/lib/release-generation.js.map"
+      },
+      {
+        "id": "dist/lib/runs-ledger.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/lib/runs-ledger.d.ts"
+      },
+      {
+        "id": "dist/lib/runs-ledger.js",
+        "kind": "generated-dist",
+        "path": "dist/lib/runs-ledger.js"
       },
       {
         "id": "dist/lib/security-config.d.ts",
@@ -83518,12 +83698,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7145,
+      "nodeCount": 7175,
       "edgeCount": 8249,
       "importEdgeCount": 6816,
       "registerEdgeCount": 68
     }
   },
   "inventorySha256": "2fa2521aec0b2891f83c36d401a00a58ba95a53d5e7fe28919c37deffe5f580d",
-  "manifestSha256": "ca95d9a497ec6097c0f640af0ced0fdb538d0bad72beb8febdb411f3342d7a9f"
+  "manifestSha256": "6c3280cc8901db94fdc3ea145ea127fe295f6add87671caebb701f25ff75083b"
 }

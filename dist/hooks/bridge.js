@@ -12,8 +12,8 @@
  * echo "$INPUT" | node ~/.claude/omc/hook-bridge.mjs --hook=keyword-detector
  * ```
  */
-import { pathToFileURL } from "url";
-import { existsSync, readFileSync, readdirSync, rmdirSync, } from "fs";
+import { fileURLToPath, pathToFileURL } from "url";
+import { existsSync, readFileSync, readdirSync, realpathSync, rmdirSync, } from "fs";
 import { dirname, join } from "path";
 import { resolveToWorktreeRoot, getOmcRoot, getSessionStateDir as resolveSessionStateDir, listSessionIds, resolveStatePath, resolveSessionStatePath, } from "../lib/worktree-paths.js";
 import { canClearStateForSession, clearStateFileLockedIf, readModeState, readModeStateWithMeta, writeModeState, writeStateFileLockedCreateIf, writeStateFileLockedIf, } from "../lib/mode-state-io.js";
@@ -2595,13 +2595,39 @@ export async function main() {
 // Run if called directly (works in both ESM and bundled CJS)
 // In CJS bundle, check if this is the main module by comparing with process.argv[1]
 // In ESM, we can use import.meta.url comparison
-function isMainModule() {
+/**
+ * Symlink-robust entry comparison: two URLs are the same entry when they are
+ * identical or when their realpaths match. A symlinked entry (e.g.
+ * ~/.local/bin/omc -> bridge/cli.cjs) yields a different URL than the module's
+ * own, but points at the same real file — the bridge must still dispatch
+ * instead of exiting silently. Exported for tests.
+ */
+export function isSameEntryRealpath(entryUrl, moduleUrl) {
+    if (!entryUrl)
+        return true;
+    if (entryUrl === moduleUrl)
+        return true;
     try {
-        return import.meta.url === pathToFileURL(process.argv[1]).href;
+        return (realpathSync(fileURLToPath(entryUrl)) ===
+            realpathSync(fileURLToPath(moduleUrl)));
     }
     catch {
-        // In CJS bundle, always run main() when loaded directly
-        return true;
+        return false;
+    }
+}
+function isMainModule() {
+    try {
+        // First check: must have --hook=<type> argument, otherwise this is not a hook invocation
+        const hasHookArg = process.argv.slice(2).some((a) => a.startsWith("--hook="));
+        if (!hasHookArg) {
+            return false;
+        }
+        const argvPath = process.argv[1];
+        return isSameEntryRealpath(argvPath ? pathToFileURL(argvPath).href : undefined, import.meta.url);
+    }
+    catch {
+        // In CJS bundle, only run main() when loaded directly AND has hook arguments
+        return false;
     }
 }
 if (isMainModule()) {

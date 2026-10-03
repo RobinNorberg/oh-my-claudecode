@@ -206,7 +206,7 @@ vi.mock('child_process', async (importOriginal) => {
         execSync: execSyncMock,
     };
 });
-import { createTeamSession, detectTeamMultiplexerContext, splitTeamWorkerPane, splitTeamWorkerPaneWithEvidence, TeamSessionCreationError, } from '../tmux-session.js';
+import { createTeamSession, detectTeamMultiplexerContext, splitTeamWorkerPane, splitTeamWorkerPaneWithEvidence, strictIdentityUnavailableError, TeamSessionCreationError, } from '../tmux-session.js';
 function destructiveProviderCalls() {
     return mockedCalls.execFileArgs.filter((args) => /\b(?:kill-server|kill-session|kill-window|kill-pane|close-surface)\b/.test(args.join(' ')));
 }
@@ -282,6 +282,31 @@ describe('createTeamSession context resolution', () => {
         });
         expect(session.tmuxServerIdentity?.socket_path).toBe(keepaliveCall?.[1]);
     });
+    it.skipIf(!supportsStrictTmuxFixture)('filters ambient environment from tmux pane shells', async () => {
+        vi.stubEnv('TMUX', '');
+        vi.stubEnv('TMUX_PANE', '');
+        vi.stubEnv('CMUX_SURFACE_ID', '');
+        vi.stubEnv('SHELL', '/bin/bash');
+        vi.stubEnv('ORCA_HOOK_TOKEN', 'issue-4128-secret-sentinel');
+        await createTeamSession('race-team', 1, '/tmp');
+        const paneCreationCalls = mockedCalls.execFileArgs.filter((args) => {
+            const command = args.join(' ');
+            return args.includes('if-shell')
+                && (command.includes('new-session') || command.includes('split-window'));
+        });
+        expect(paneCreationCalls).toHaveLength(2);
+        for (const args of paneCreationCalls) {
+            const command = args.join(' ');
+            expect(command).toContain('/usr/bin/env -i');
+            expect(command).toContain('PATH=');
+            expect(command).toContain('HOME=');
+            expect(command).toContain('TERM="$TERM"');
+            expect(command).toContain('TMUX="$TMUX"');
+            expect(command).toContain('TMUX_PANE="$TMUX_PANE"');
+            expect(command).not.toContain('ORCA_HOOK_TOKEN');
+            expect(command).not.toContain('issue-4128-secret-sentinel');
+        }
+    });
     it('uses native cmux splits instead of a detached tmux session when running inside cmux', async () => {
         vi.stubEnv('TMUX', '');
         vi.stubEnv('TMUX_PANE', '');
@@ -350,6 +375,7 @@ describe('createTeamSession context resolution', () => {
         const session = await createTeamSession('race-team', 1, '/tmp', { newWindow: true });
         const newWindowCall = mockedCalls.execFileArgs.find((args) => args.join(' ').includes('new-window'));
         expect(newWindowCall?.join(' ')).toContain('new-window');
+        expect(newWindowCall?.join(' ')).toContain('/usr/bin/env -i');
         expect(newWindowCall).toEqual(expect.arrayContaining(['-S', strictSocketPath]));
         expect(newWindowCall?.join(' ')).toContain('-t');
         expect(newWindowCall?.join(' ')).toContain('omx');
@@ -726,6 +752,25 @@ describe('splitTeamWorkerPane multiplexer routing (#3267)', () => {
             stderr: '',
             paneId: null,
         });
+    });
+});
+describe('strictIdentityUnavailableError (issue #4192)', () => {
+    it('names the missing darwin contained-fs addon and its build command', () => {
+        const missing = new Error('The contained filesystem backend is unavailable at /pkg/native/contained-fs-darwin-arm64.node. Build it with node scripts/build-contained-fs.mjs (from the installed package directory) before running graph or team commands.');
+        const error = strictIdentityUnavailableError('darwin', () => { throw missing; });
+        expect(error.message).toMatch(/^tmux_server_identity_probe_unavailable: /);
+        expect(error.message).toContain('contained-fs-darwin-arm64.node');
+        expect(error.message).toContain('scripts/build-contained-fs.mjs');
+        expect(error.cause).toBe(missing);
+    });
+    it('keeps the bare code when the darwin addon loads but the probe still fails', () => {
+        const error = strictIdentityUnavailableError('darwin', () => ({}));
+        expect(error.message).toBe('tmux_server_identity_probe_unavailable');
+    });
+    it('does not consult the addon on other platforms', () => {
+        const loadNative = vi.fn(() => { throw new Error('should not load'); });
+        expect(strictIdentityUnavailableError('win32', loadNative).message).toBe('tmux_server_identity_probe_unavailable');
+        expect(loadNative).not.toHaveBeenCalled();
     });
 });
 //# sourceMappingURL=tmux-session.create-team.test.js.map

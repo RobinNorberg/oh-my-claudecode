@@ -19916,6 +19916,1454 @@
           "previousFilename": null
         }
       ]
+    },
+    {
+      "pullNumber": 4203,
+      "targetRef": "main",
+      "mergeBaseSha": "e74b22cd34e0a8b9dd5ded87d1bf0db6ce1a38dd",
+      "headSha": "1b85e2245b77b578fa999a916c0c6a8d360e0bcb",
+      "owner": "Yeachan-Heo",
+      "expiresAt": "2026-12-30T13:09:58.331Z",
+      "generatedDelta": {
+        "count": 239,
+        "sha256": "c7d08e71f48c18f251c2fce72b56184623b2b88722e90b7984d7e1bb3d0771ff"
+      },
+      "generatedFiles": [
+        {
+          "status": "modified",
+          "filename": "bridge/claude-md-coordinator.cjs",
+          "sha": "f82e6caa47a9df082e8dd517153b9b26b90846d1",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "bridge/cli.cjs",
+          "sha": "d6d08360236d47888a1c5ec329ea5a369d6ddaef",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "bridge/mcp-server.cjs",
+          "sha": "9427acf379f8004630ebae9bf95b81d77f4e4795",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "bridge/runtime-cli.cjs",
+          "sha": "a88f92d263a200760a5afc6a1642798ac9547568",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "bridge/team-bridge.cjs",
+          "sha": "83bc943fb74544c1e6445f9e7db4ed0cdfbf0b6a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "bridge/team-mcp.cjs",
+          "sha": "b0a24126f310541a21404d6df717d487537ce3fb",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "bridge/team.js",
+          "sha": "b8071f931e0577a9d6a05a9afb2a849af7497b54",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/consolidation-contracts.test.js",
+          "sha": "fc386b358786a419cba8624f8105eff5d4252a89",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/consolidation-contracts.test.js.map",
+          "sha": "62961b012a3059987b7e1c0984816cc942428661",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/directory-context-injector.test.js",
+          "sha": "66b47b4565300972ec3d1b2215c602a005b04f5c",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/directory-context-injector.test.js.map",
+          "sha": "8af4d71719dbf0c6080ac620412172401041da11",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/doctor-conflicts.test.js",
+          "sha": "60c8d3e9551ab28e089298aaec441b4bd4050fb7",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/doctor-conflicts.test.js.map",
+          "sha": "dd569194c336ddb543dd438ce90f794e25396ec7",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/hud/watch-mode-init.test.js",
+          "sha": "a350f07892ab1c0506fcab8505c70b3b61f5c784",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/hud/watch-mode-init.test.js.map",
+          "sha": "8dbb68cce28ad498f933a33feca7e870a1d31e59",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/preemptive-compaction-hook.test.js",
+          "sha": "6a7d6cc42217a34299cbbf176e43f51b88adb535",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/preemptive-compaction-hook.test.js.map",
+          "sha": "4049b42cba07f71c2e7ee5a75c1b57107705bd3f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/ralph-prd-stale.test.js",
+          "sha": "16af9f662c336351c2163b0b079cc7a627799c2b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/ralph-prd-stale.test.js.map",
+          "sha": "e8df08ed0c54326b2af732be4be8cb2a86fda27a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/ralph-prd.test.js",
+          "sha": "7f1c15baceeb6b9569b5909d2bb20e3186c26f3c",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/ralph-prd.test.js.map",
+          "sha": "edbaa8095f5082dc206e81d312c8a942e26481d2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/setup-claude-md-script.test.js",
+          "sha": "3f26ab8541e21424fd1bbe3137aeaacd2990e9f2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/setup-claude-md-script.test.js.map",
+          "sha": "7bc2a44c5454b9c149e5b92c3b9a5c58f66b5edf",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/setup-contracts-regression.test.js",
+          "sha": "04025d5192e90897c6fc74bd2f13f2702f95b1f2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/setup-contracts-regression.test.js.map",
+          "sha": "6e29b3eb150238efdf07bfe30d9bbff487608978",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/skills.test.js",
+          "sha": "0fee92d19b997a0f459a84fa44737dde764f3700",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/__tests__/skills.test.js.map",
+          "sha": "5dc2f0175b4cdc5a765d51b49f8339ee08b505fe",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/alias-retirement/__tests__/registry.test.js",
+          "sha": "156e2286f51adb8a20f6cb13104cd1a6e247a249",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/alias-retirement/__tests__/registry.test.js.map",
+          "sha": "801490c210e64eeb3627d9ef66613390fa185e6a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/autoresearch-setup-session.test.js",
+          "sha": "1e116001d750b3089987eac1526821df9beb8acc",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/autoresearch-setup-session.test.js.map",
+          "sha": "ca9cddf6d4ac942567d0e85d8db07375c9b802d2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/launch.test.js",
+          "sha": "0c8a3c6eca340152320c7bf67617ab0d31befd4b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/launch.test.js.map",
+          "sha": "df1ab23e3cf09629c55e65b4d6b563d0bd258d81",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/team-runtime-boundary.test.js",
+          "sha": "d5f12d4ad23fc545b283cf52bb3c4259bb3ec070",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/team-runtime-boundary.test.js.map",
+          "sha": "7c930e0dbb2ee3a0062c09314f471ed72e9f145e",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/team-status-worktree.test.js",
+          "sha": "31a9844bba06b7db954e0b9a0344aaff99086d22",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/team-status-worktree.test.js.map",
+          "sha": "a00a4662d83776c0a3417198f7b7eabefcb2af87",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/tmux-utils.test.js",
+          "sha": "380f20ac5466f943c0884e9c0ef0ce62442f6510",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/__tests__/tmux-utils.test.js.map",
+          "sha": "02d9934f6962d4ab7b92958b1e1a63b65ff22ec7",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/autoresearch-setup-session.d.ts.map",
+          "sha": "f377ac2222c80058a23f4004d07d978c5e104be2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/autoresearch-setup-session.js",
+          "sha": "4e1a23e202e19f8950c5501ca23feb8ae1592873",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/autoresearch-setup-session.js.map",
+          "sha": "ba8aa6b5a1e4eff99d7d22a96e27ec1f417eeb63",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/__tests__/team-role-shorthand.test.js",
+          "sha": "78c79c478254c18e7ea39343b2691bce7e2a55ef",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/__tests__/team-role-shorthand.test.js.map",
+          "sha": "1776e4e29a9686b5e53de63024477790c860f059",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/__tests__/team.test.js",
+          "sha": "a17d8332a61f68931a3698a3012f6f3229a1997f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/__tests__/team.test.js.map",
+          "sha": "8bf501aafca2ff5ca4b13921e6ab62fdb511306a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/doctor-conflicts.d.ts.map",
+          "sha": "a07cc45742b6fdc77cc7333a5eedff387663a4f3",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/doctor-conflicts.js",
+          "sha": "accadab2b7e401987839dce024a04647ee07879a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/doctor-conflicts.js.map",
+          "sha": "b16f4d4c26dfe25da871b07e6424f879d4c44d3f",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/cli/commands/factory.d.ts",
+          "sha": "7effce34dbc0f2317c3a3e2067f92257c67d63cf",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/cli/commands/factory.js",
+          "sha": "6cbc26a1299bbb3ae72ff00129a1bca2fd483d56",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/cli/commands/intake.d.ts",
+          "sha": "6aee7af46cec36c967e2e2913ca7afe585c7fd2e",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/cli/commands/intake.js",
+          "sha": "e8ef8ffd7bd60bc3570d524f89a48fae26a81e60",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/cli/commands/ralph.d.ts",
+          "sha": "20cc57b79d7e9632d7df3b5526b8cd1331e1d287",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/cli/commands/ralph.js",
+          "sha": "096738827d0c847beec0a30751d0612be7353b59",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/team.d.ts.map",
+          "sha": "aae50fedd5064a60f4ed7a115df09c5d0d3d286d",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/team.js",
+          "sha": "209c0ef7659d346730dd98cca5da550f801ac79b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/commands/team.js.map",
+          "sha": "042879e96d6a04350c13ab3e95db4daedfb63769",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/index.d.ts.map",
+          "sha": "d5e8adaf2a3bffeac480512a4e1b2fcf512fe749",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/index.js",
+          "sha": "9949f1633fa475c3df31d2788d9d4b58010b2153",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/index.js.map",
+          "sha": "02f353da36fb93539d1814a03e06c6ef4973bd49",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/launch.d.ts.map",
+          "sha": "d5f8684eeae79a766b121cfd6dc6329daa92c703",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/launch.js",
+          "sha": "2028a38161be5bf3f427fb600d3f2b033a8ad266",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/launch.js.map",
+          "sha": "3c3e0ff661c3bdd2960e73501822bca0b91d82f0",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/team.d.ts.map",
+          "sha": "89dc51365e78b5367b160886dfdda8eadd333062",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/team.js",
+          "sha": "46b6a911bb54d6a7f4f854ede6670b7f483ed2d2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/team.js.map",
+          "sha": "e5ac08af4af31a2914734e3a6b60e2f2869948a1",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/tmux-utils.d.ts.map",
+          "sha": "e4ddeba1cc71bd073db2bc042f3e2f646d9ef3b2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/tmux-utils.js",
+          "sha": "f5a809da96337bb50bf36c10ca52ce16af83dde4",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/cli/tmux-utils.js.map",
+          "sha": "3dad80fd83aa715b2cfef213886831f34232f310",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/factory/listener.d.ts",
+          "sha": "2283cf7929108c97e26ed20afcc716076c2f555f",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/factory/listener.js",
+          "sha": "c40558bd2f72d84d4e2b933796c8e45c7d72f369",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/factory/status.d.ts",
+          "sha": "ee4673e10f85087d876a5d3a9dcadfb6f032884f",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/factory/status.js",
+          "sha": "77e445c81d660c7c511006eac9c8de0bd55c026f",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/factory/watchdog.d.ts",
+          "sha": "76a739d01216994cae12b8f089f0d95b4f5a2f15",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/factory/watchdog.js",
+          "sha": "d0e338c25cef15287fd8768e2c2bac83425a07bc",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/factory/watchdog.test.d.ts",
+          "sha": "6dde934299f782613cc96ec0e4e56edfd053f508",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/graph/runtime/native-contained-fs.js",
+          "sha": "72d103b3d7ee1c48417e44add3aad673e58103f0",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/__tests__/workflow-drift-guard-script.test.js",
+          "sha": "4c0bc63be385643cf1f55a9b8fa1db4a5ec7ef68",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/__tests__/workflow-drift-guard-script.test.js.map",
+          "sha": "7b6e9f0e9c58506dd0c067a462630094a06f187f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/bridge.d.ts",
+          "sha": "6feec59204ea7623a57827851747efa3902454a7",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/bridge.d.ts.map",
+          "sha": "6b8a9439f539ce3cc0da8f2a6422acf3fc690ffe",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/bridge.js",
+          "sha": "573db37079fce38e47da0f5733529b4837906398",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/bridge.js.map",
+          "sha": "ce7fd516d672a56c612cb37ff1b004c9aa3ebbdb",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/directory-readme-injector/index.d.ts.map",
+          "sha": "525077c68a62e79b4938a6fcecbde6dd86ffd9fe",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/directory-readme-injector/index.js",
+          "sha": "8848a7293bf2c011206360c05bc240cfc27c39db",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/directory-readme-injector/index.js.map",
+          "sha": "e87ddc209b8e83b1fc0291ed8a9f45ace5d35cda",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/client.d.ts",
+          "sha": "cba5a50bd97cb5d4f788cd3a461fffea36d8ab45",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/client.js",
+          "sha": "28e2132f18df496ca2a7822e5d8ebeb834d49103",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/config.d.ts",
+          "sha": "df47866cab541240f271123a86464a884c3a78f0",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/config.js",
+          "sha": "27a962dc30ddab7792761775e7131b4a747cae71",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/points.js",
+          "sha": "2154c71ff6ed643500e667ee279f0f9e875bb804",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/resolver.d.ts",
+          "sha": "1c9e40c87cc483d48d2166e9b68a25241db2fad2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/resolver.js",
+          "sha": "8865826b377fac649a71af83d169348f892af2c9",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/jev/types.d.ts",
+          "sha": "6349ff8dbb1b8b24d69b82dd0be1299c6e56a25b",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/ralph/feedback-baseline.d.ts",
+          "sha": "7e4dfe98289f82b2c1714f39d7a10dcf085f964c",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/ralph/feedback-baseline.js",
+          "sha": "31a53ad1459a40d5d78c95a54ccba34a69dd9e39",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/index.d.ts",
+          "sha": "f0ec0f38b56b636b8901f20f3338a9f4f23d3991",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/index.d.ts.map",
+          "sha": "8e7e54a6688932c210c2684dd0d3172daa6b0518",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/index.js",
+          "sha": "499ba0409a2aa23307b232704321449f993958cd",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/index.js.map",
+          "sha": "f4eb701a4d7fcab85df749212e0b7e3eef303b8d",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/loop.d.ts",
+          "sha": "191a561f898dcdd428b6c09f221845196351689f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/loop.d.ts.map",
+          "sha": "576fadfbccc903a4302141a868bdb1186eb8ea06",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/loop.js",
+          "sha": "e3f976db4e14326188d395e5b468a4cd2a609be4",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/loop.js.map",
+          "sha": "b0f4c11e8f87f2390e782585f036267b15afcbd4",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/prd.d.ts",
+          "sha": "903ba65fecc10f6dd58c875db62d5df0ab7e19da",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/prd.d.ts.map",
+          "sha": "748a3be035e2f3345dc2f997bc0ccdf3bdafb801",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/prd.js",
+          "sha": "60818a932477e4451c9eefc65ab2114be621a96e",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/ralph/prd.js.map",
+          "sha": "169d7e417a2cc403155e148cf8830c97d472490a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/registry/__tests__/registry.test.js",
+          "sha": "4837def3a4012d57b3ad93b7a18711273987de78",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/registry/__tests__/registry.test.js.map",
+          "sha": "5547877941dc11fbfbac5e6d8ac9970492594e8b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/rules-injector/matcher.d.ts.map",
+          "sha": "c62aa9068a25d270a0dddcbec28cd1036a536de7",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/rules-injector/matcher.js",
+          "sha": "590540e6febffb33145ee7202da9a11c1868d6cb",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/rules-injector/matcher.js.map",
+          "sha": "bad3331150d14055ee91c566082c1c54247764dc",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/rules-injector/matcher.test.d.ts",
+          "sha": "1c345b8e4d12e23dae0602b7c8131a4e58df2a16",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/__tests__/action-runner.test.js",
+          "sha": "44de9fb4369403ebb6cf9b7a327c0a4575e5aad9",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/__tests__/action-runner.test.js.map",
+          "sha": "beeca7eea412e3f53f0065c1522bd07872fbed6b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/__tests__/cleanup-manifest.test.js",
+          "sha": "e5af87127cf9db3f6a517fa4fe3954b6d75cc9c7",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/__tests__/cleanup-manifest.test.js.map",
+          "sha": "7205e40046ab93488608c36c82e93ba2c933d95c",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/__tests__/worker.test.js",
+          "sha": "e1967da1110acc4efe010a8742b3488b70ac5e79",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/__tests__/worker.test.js.map",
+          "sha": "dc83b97648e60a5609f3a5f15baff4bac31d085f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/action-runner.d.ts.map",
+          "sha": "0547c1ee14e74c2085f6ad8be5301818463a8081",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/action-runner.js",
+          "sha": "294e393e07b93b0ee68c77b6671de7008e7d51c4",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/action-runner.js.map",
+          "sha": "3d370504a36de82c73d0c0336e061512660eb20a",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/chain-enqueuer.d.ts",
+          "sha": "ba59c91e7bf8ea683ba24b8ee15d7416b9cb7eb6",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/chain-enqueuer.js",
+          "sha": "94be5534a9e03bf83ca664edcd9cc69f7b20844e",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/check-evidence.d.ts",
+          "sha": "ce4834b853d187cde344a3c1ed7c909956f56ba4",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/check-evidence.js",
+          "sha": "18bbb2327aaf172d226c60694ebe9ea6bad96523",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/cleanup-manifest.d.ts",
+          "sha": "02e236315f30808cc80d69594f12d3e19846c738",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/cleanup-manifest.d.ts.map",
+          "sha": "57763267de269fab2051f460d3266e6eb218696c",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/cleanup-manifest.js",
+          "sha": "bd62e4f0865262ce93a81985b42cb98ce1f0d587",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/cleanup-manifest.js.map",
+          "sha": "7f815474763aa19ce2a6913cdefca16e470b99c6",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/foreground-bootstrap.d.ts.map",
+          "sha": "87b38c9fae7841403197baaff4e245a27884e16c",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/foreground-bootstrap.js",
+          "sha": "92cd5b9f0a4122ede4e6138344f7c5423bf23912",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/foreground-bootstrap.js.map",
+          "sha": "e32cd268f67dc864ac49b43a8a70b0d69410b26a",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/guardrails.d.ts",
+          "sha": "1d80203e77734e8dde1908134afaff53b721d4bc",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/guardrails.js",
+          "sha": "82731e383c931e9f0c5c63b908f421188090fb3c",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/index.d.ts.map",
+          "sha": "583fba23fc295c733025611a5e6ec0a65ab4854f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/index.js",
+          "sha": "15703fe9f632e9490c464b25fe2e38bea06324b0",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/index.js.map",
+          "sha": "534fb8f09f12703ab91630f9f7178c61512bef56",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/routing.d.ts",
+          "sha": "a907dfcf1a49fb002dc9fffd1f4668548a23755c",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/routing.js",
+          "sha": "82cc1fda2ea472e1ba8ef39de311c6aeaeec37fe",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/spawn-next.d.ts",
+          "sha": "81fa7ed480321d96e8f8555e2bfc7913dd1562a4",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/hooks/session-end/spawn-next.js",
+          "sha": "a165a48e71e90fafef6d4dab42762a0dc805bb7b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/worker.d.ts.map",
+          "sha": "446bd24462c1d440e075dd041fc05e12574c2cc2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/worker.js",
+          "sha": "a4e4e7f2c90f2ae90e251e8b1bbf696b1bf57ab2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hooks/session-end/worker.js.map",
+          "sha": "a0a23564ac29f2867ccba93e0736872e89ddefae",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hud/index.d.ts.map",
+          "sha": "d114de0f7373de002a8272615fb2867c37128b7b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hud/index.js",
+          "sha": "879c13dcb265a7024de07a0fcf314ca718b89a65",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/hud/index.js.map",
+          "sha": "d8d13c149b07e7f40b713ef14796fb044987b8fc",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/__tests__/hook-command-portability.test.js",
+          "sha": "6f0a83a3eba16861d9561fb4b16c7a078c300e2f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/__tests__/hook-command-portability.test.js.map",
+          "sha": "cf1b03487c220c4abf794fec801cd6d43d6d2ea3",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/__tests__/mcp-registry.test.js",
+          "sha": "81b962bcea3de0931353581f2ecf725c33ceab48",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/__tests__/mcp-registry.test.js.map",
+          "sha": "a0f57b8d4ec4b195b886608970b19b8c1274f5d8",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/__tests__/standalone-hook-reconcile.test.js",
+          "sha": "adaf671085f32399fc9e1fc8774ad310a8284eda",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/__tests__/standalone-hook-reconcile.test.js.map",
+          "sha": "ab01be3e57592df0c22a7c5ff69bcd6ee3f3a9ab",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/hooks.d.ts",
+          "sha": "0b72729e2f0796a625dadc912307017a3e9f9db3",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/hooks.d.ts.map",
+          "sha": "3b407c2a417fb1709c486d90ba9770beec44f05d",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/hooks.js",
+          "sha": "ba9c32f98ea3974a4279fc9b061596d9af5bcb98",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/hooks.js.map",
+          "sha": "ac3adba5cb23634f39371546a8c08ef6070dd61c",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/index.d.ts",
+          "sha": "d5f4a26892f6191c96ba29e9ed8c7f2d19050da4",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/index.d.ts.map",
+          "sha": "ab5e90ceaa91ce7bfd40fa8bd1e81cb0324767fb",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/index.js",
+          "sha": "a7db0b4cf8e3b70805265d2fec3b3e1ad3c1c4c4",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/index.js.map",
+          "sha": "df6a8632eb3c6bc43bd5af4f2ba62da362bd4185",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/mcp-registry.d.ts.map",
+          "sha": "4b0940f4324164cf2c492bf35591239aa8412d64",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/mcp-registry.js",
+          "sha": "f595049d1fd85de1baee139a949620687d2dedcb",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/installer/mcp-registry.js.map",
+          "sha": "4dcc8841d7290361d8dcfd38a34e81dafb65a805",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/lib/atomic-write.d.ts",
+          "sha": "2cc75b9346ee803d9d8fe13417667abdecd581cd",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/lib/atomic-write.d.ts.map",
+          "sha": "e85ad024449b80553313cab3de0df8ba67446b12",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/lib/atomic-write.js",
+          "sha": "2ce1adc107cbacab13e29d564e94a3666985cb7b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/lib/atomic-write.js.map",
+          "sha": "16a4567f26dbcfac6b7a37420d9459cacdf79f49",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/lib/host-load-gate.d.ts",
+          "sha": "52b56ad15e9a3a99f7ee4fdff54bd96d1730c1ee",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/lib/host-load-gate.js",
+          "sha": "1d86d85d69a85ca3f451bb6b2b64c13edd3eb4d8",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/lib/mode-state-io.d.ts.map",
+          "sha": "166594307f8e972c36cf5f7f83a92f2ac6451796",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/lib/mode-state-io.js",
+          "sha": "cc89a3aca48f70a9b83765a21bc39d9af704a66d",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/lib/mode-state-io.js.map",
+          "sha": "67ace3e4f82b0d442b26896b90fe4289a327c121",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/lib/runs-ledger.d.ts",
+          "sha": "52e1e4b0259608374f6a36162392084a5d343c62",
+          "previousFilename": null
+        },
+        {
+          "status": "added",
+          "filename": "dist/lib/runs-ledger.js",
+          "sha": "da33cfd58d8eff98f0542e8debaf343d821378fe",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/api-interop.cwd-resolution.test.js",
+          "sha": "71a4e9630e849b66bc40e2eedd2e72c3823dc89a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/api-interop.cwd-resolution.test.js.map",
+          "sha": "02272019738da0692c720ea75fa71993fc4da925",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/cli-detection.test.js",
+          "sha": "28f6e7f7ce4d96de822f785e1cfdb695769ccb3e",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/cli-detection.test.js.map",
+          "sha": "55015346fbb0daca6eb2af129158eee178056a61",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/model-contract.test.js",
+          "sha": "a31fdcd4378ccdce35fb9ff0b458671e5c5a5ba1",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/model-contract.test.js.map",
+          "sha": "ae451b9abf431c6182362892bd2dabd702c92e5a",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/runtime-v2.dispatch.test.js",
+          "sha": "a1d9fd31c3c6fe6bc83a606fd3b4d738e148f543",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/runtime-v2.dispatch.test.js.map",
+          "sha": "1384d35733ac0f4cc572c0477490d4dffe89e75d",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/runtime-v2.shutdown.test.js",
+          "sha": "d1eb93102271d2b170609ccfa633e06732614263",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/runtime-v2.shutdown.test.js.map",
+          "sha": "44d1d53dd448b924712062eaf5bd353069fcf0a2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/teardown-invariant.test.js",
+          "sha": "76a694af433dddf6e9d6fcdc73afbfe5a39d70f4",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/teardown-invariant.test.js.map",
+          "sha": "f86d5204411d13dba1a08ea180ed84abee7043e9",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/tmux-session.create-team.test.js",
+          "sha": "c923191c079c7b0394b88f063f898b0ed24111e2",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/tmux-session.create-team.test.js.map",
+          "sha": "58b903bc6eb832762547b5dd7206abb4a780ab78",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/tmux-session.startup.test.js",
+          "sha": "4664ac6b90b20a5a9f6a391a4e6435f396ec5c71",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/tmux-session.startup.test.js.map",
+          "sha": "f1a4ebabd2ff5eca1523e20cdcae50532b4252fd",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/tmux-session.test.js",
+          "sha": "0654968a189bdb9d9f6d1dd1a9435f08a1490a98",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/tmux-session.test.js.map",
+          "sha": "552bc19f08f6a2efac020bdc06ec0bf931a6a601",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/worker-bootstrap.test.js",
+          "sha": "2c52d64f5975ebcfbb9f4d30128ab70e1cd25237",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/worker-bootstrap.test.js.map",
+          "sha": "6f961eb92ce5c1d75091a09a240a71382b0e7adc",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/worker-launch-ack.test.js",
+          "sha": "eb59dc4a3449ee090f4bc7c44e864055b24edb7e",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/__tests__/worker-launch-ack.test.js.map",
+          "sha": "5886fa533e46872feb0f1856eab2aac6b9ac0ce8",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/api-interop.d.ts.map",
+          "sha": "56c2087b0007be07d90a8c95ada48e363059b986",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/api-interop.js",
+          "sha": "815766c2f3954e59e381878ab0afb241a2671cba",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/api-interop.js.map",
+          "sha": "78324f52ad965964b075dfa319a171a26c9863c7",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/cli-detection.d.ts.map",
+          "sha": "74badfe4dd51dbafc9dfece1ceafed11c4e02e18",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/cli-detection.js",
+          "sha": "2bd7fd767f729eeae097556f71266d52f6388383",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/cli-detection.js.map",
+          "sha": "d13b959d473ca4b9ac96323e03ed3a0ec94e8d36",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/merge-orchestrator.d.ts.map",
+          "sha": "d2e60b0bb85ebc6c27f3d0357ccf93d523ce1cc3",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/merge-orchestrator.js",
+          "sha": "fc054cff2bd79d3f6fbb3c8c116ca751296f87cb",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/merge-orchestrator.js.map",
+          "sha": "fec47c83507b3aec9f45643aebe06684ed813e59",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/model-contract.d.ts.map",
+          "sha": "cd1859569a083dc2fbfe963a4e7b34ac07c7da79",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/model-contract.js",
+          "sha": "3df6550b201e57ed11ccf3aa114bb410fa8ff420",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/model-contract.js.map",
+          "sha": "b243b34153ea86222f11ac331acdc1f6cfe6c277",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/runtime-v2.d.ts",
+          "sha": "7657cf00333a95c57cc119b0f5ecc2610b4e3c76",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/runtime-v2.d.ts.map",
+          "sha": "a56801854238981e819ba64c7a8da81dfcd10f28",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/runtime-v2.js",
+          "sha": "4f87ab696129680c87c32c43b5de5a0c98c5a304",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/runtime-v2.js.map",
+          "sha": "e05c67f57957d2d0722acd60c8fca16f40b9901b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/tmux-session.d.ts",
+          "sha": "a4d7ca4b677f7a558587699ca871bce8ba8c3027",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/tmux-session.d.ts.map",
+          "sha": "35736febae482625b09761ad2d6d6bf18955f596",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/tmux-session.js",
+          "sha": "550ef9a3a497475243755f253ed8d21e3c893be3",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/tmux-session.js.map",
+          "sha": "13e0e35ed2481f5425796dc866e2b1134fda9996",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-bootstrap.d.ts",
+          "sha": "3f2301a0ec7179c2f05e10b73364fa5df378a0a8",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-bootstrap.d.ts.map",
+          "sha": "3cd43b5685e545a9673d8138c160a59d16e16ad3",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-bootstrap.js",
+          "sha": "930b90b7c32109a4c58922ef97fb0356b7d91012",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-bootstrap.js.map",
+          "sha": "5b1992c1a9fbbd47af4d5a42b6c209896da830c8",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-launch-ack.d.ts",
+          "sha": "e99f5a95f6492766726f56992b5f6abec194903b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-launch-ack.d.ts.map",
+          "sha": "649a8824b4309ff9d563a560c0735ca994687698",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-launch-ack.js",
+          "sha": "9f800f65724f93a913f73096b3fdba4d1897544e",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/team/worker-launch-ack.js.map",
+          "sha": "96ac76cc5df36a071b26605973cd48210598dfad",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/tools/lsp/__tests__/client-handle-data.test.js",
+          "sha": "d22b3b849f6e98987a5974cf97aa63128ac33e5f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/tools/lsp/__tests__/client-handle-data.test.js.map",
+          "sha": "fb3a60e1ed75c7e202f7c5e03d5ea06a055644be",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/tools/lsp/client.d.ts.map",
+          "sha": "414099b437cf129f8ad4f26369daaadbdb41864f",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/tools/lsp/client.js",
+          "sha": "bc3922b820a685a9c006069908e699b8b87ded0d",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/tools/lsp/client.js.map",
+          "sha": "fdc33b390e564ab0e98f3eb0bc5dc35df634f438",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/workflow/__tests__/projections.test.js",
+          "sha": "84dac1f420eb30866b100d88b45e9c684b2aa8bf",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/workflow/__tests__/registry.test.js",
+          "sha": "06108033726f48390fc75219634363468aac561b",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/workflow/__tests__/registry.test.js.map",
+          "sha": "4d488122d25039e2c760242aec6469184ba8f4ef",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/workflow/registry.d.ts.map",
+          "sha": "f1a482bebf0c7635ea43566dd757df73af46c827",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/workflow/registry.js",
+          "sha": "dfb0b4dd86669f5c666f5c8415c5cf4f7c775366",
+          "previousFilename": null
+        },
+        {
+          "status": "modified",
+          "filename": "dist/workflow/registry.js.map",
+          "sha": "653c0162d2492613182c85d771cc6f17532455d8",
+          "previousFilename": null
+        }
+      ]
     }
   ]
 }
