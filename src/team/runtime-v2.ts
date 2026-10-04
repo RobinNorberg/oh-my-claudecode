@@ -4113,13 +4113,15 @@ export async function startTeamV2(config: StartTeamV2Config): Promise<TeamRuntim
     throw new Error(`cli_binary_preflight_failed:${missing}`);
   }
 
+  // Clean up any stale reservations from dead processes BEFORE acquiring the lifecycle lock.
+  // This prevents nested lock acquisition and ensures old dead-owner reservations don't block startup.
+  try {
+    await cleanupStaleReservations(sanitized, leaderCwd);
+  } catch {
+    // Best-effort; proceed even if cleanup fails
+  }
+
   return withTeamInstanceLifecycleLock(leaderCwd, sanitized, async () => {
-    // Clean up any stale reservations from dead processes before attempting to reserve
-    try {
-      await cleanupStaleReservations(sanitized, leaderCwd);
-    } catch {
-      // Best-effort; proceed even if cleanup fails
-    }
     
     // Reserve the name before creating any state, worktree, pane, or provider
     // effect.  The reservation remains external and blocks same-name startup
