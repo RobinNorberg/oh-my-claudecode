@@ -554,6 +554,14 @@ async function main() {
     process.exit(0);
   }
 
+  const command = commandFromPayload(payload);
+  if (!command) process.exit(0);
+
+  // Fast-path: if command doesn't contain 'git', exit immediately without
+  // checking mode state or expensive command parsing. This optimizes the
+  // common case of non-git bash commands (e.g., npm, find, echo).
+  if (!command.toLowerCase().includes('git')) process.exit(0);
+
   const explicit = process.env.OMC_GIT_GUARDRAILS === '1';
   let activeMode = null;
   if (!explicit) {
@@ -565,9 +573,6 @@ async function main() {
     activeMode = await activeUnattendedMode(directory, sessionId);
     if (!activeMode) process.exit(0);
   }
-
-  const command = commandFromPayload(payload);
-  if (!command) process.exit(0);
 
   const label = destructiveCommandLabel(command);
   if (label) {
