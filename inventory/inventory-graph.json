@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "032641a408475ed75e3e94fc860469b3c592b176",
-    "sourceSha256": "3b99bbd2e8231e1c7ed9398ea23b83125a256d79bfa378e1ae678d8ed40b5c78",
+    "head": "d43b668da9ffaf0adfb89d9ede3b65b05c4a864b",
+    "sourceSha256": "a8aa5661894f70307c221aaf792d7e2cd7bf514ecbcb6c3784f6ac2a44891427",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "032641a408475ed75e3e94fc860469b3c592b176",
-  "sourceSha256": "3b99bbd2e8231e1c7ed9398ea23b83125a256d79bfa378e1ae678d8ed40b5c78",
+  "head": "d43b668da9ffaf0adfb89d9ede3b65b05c4a864b",
+  "sourceSha256": "a8aa5661894f70307c221aaf792d7e2cd7bf514ecbcb6c3784f6ac2a44891427",
   "counts": {
     "public": {
       "skills": 47,
@@ -854,6 +854,7 @@
       "scripts/post-tool-rules-injector.mjs",
       "scripts/post-tool-use-failure.mjs",
       "scripts/post-tool-verifier.mjs",
+      "scripts/postinstall-contained-fs.mjs",
       "scripts/pre-compact.mjs",
       "scripts/pre-tool-enforcer.mjs",
       "scripts/project-memory-posttool.mjs",
@@ -34145,6 +34146,11 @@
         "path": "scripts/post-tool-verifier.mjs"
       },
       {
+        "id": "scripts/postinstall-contained-fs.mjs",
+        "kind": "script",
+        "path": "scripts/postinstall-contained-fs.mjs"
+      },
+      {
         "id": "scripts/pre-compact.mjs",
         "kind": "script",
         "path": "scripts/pre-compact.mjs"
@@ -42265,6 +42271,11 @@
         "path": "tests/integration/concurrent-ralph-sessions.test.ts"
       },
       {
+        "id": "tests/integration/contained-fs-packaging.test.ts",
+        "kind": "other",
+        "path": "tests/integration/contained-fs-packaging.test.ts"
+      },
+      {
         "id": "tests/integration/epic-3698-closure-verifier.test.ts",
         "kind": "other",
         "path": "tests/integration/epic-3698-closure-verifier.test.ts"
@@ -44204,6 +44215,26 @@
       {
         "from": "scripts/post-tool-verifier.mjs",
         "to": "scripts/lib/stdin.mjs",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/postinstall-contained-fs.mjs",
+        "to": "external:node:child_process",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/postinstall-contained-fs.mjs",
+        "to": "external:node:fs",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/postinstall-contained-fs.mjs",
+        "to": "external:node:path",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/postinstall-contained-fs.mjs",
+        "to": "external:node:url",
         "kind": "imports"
       },
       {
@@ -82907,6 +82938,21 @@
         "kind": "imports"
       },
       {
+        "from": "tests/integration/contained-fs-packaging.test.ts",
+        "to": "external:node:fs",
+        "kind": "imports"
+      },
+      {
+        "from": "tests/integration/contained-fs-packaging.test.ts",
+        "to": "external:node:path",
+        "kind": "imports"
+      },
+      {
+        "from": "tests/integration/contained-fs-packaging.test.ts",
+        "to": "external:vitest",
+        "kind": "imports"
+      },
+      {
         "from": "tests/integration/epic-3698-closure-verifier.test.ts",
         "to": "external:node:child_process",
         "kind": "imports"
@@ -83698,12 +83744,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7175,
-      "edgeCount": 8249,
-      "importEdgeCount": 6816,
+      "nodeCount": 7177,
+      "edgeCount": 8256,
+      "importEdgeCount": 6823,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "2fa2521aec0b2891f83c36d401a00a58ba95a53d5e7fe28919c37deffe5f580d",
-  "manifestSha256": "ec3c9a013d97ee4480280aef1b67b04fae4c2bb1a54e62764ea662fb1a7bb46e"
+  "inventorySha256": "e9a73dbbfbfeee32b392e922fbf0c11c6a1c707ca7be22f23026fc42fe1c6faa",
+  "manifestSha256": "d824e4588b153b97c63d4fa2db906f769bdaa693ed69782082cf16ebef2256f2"
 }
