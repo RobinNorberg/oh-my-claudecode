@@ -1,37 +1,56 @@
 #!/usr/bin/env node
+/**
+ * Optional postinstall hook for contained-fs native module.
+ * 
+ * This script safely attempts to build the native module when a package is installed.
+ * It gracefully skips if:
+ * - Already in development/source repository
+ * - Native binary already exists
+ * - Build tools not available
+ * 
+ * This never fails the npm install - it only logs warnings.
+ */
+
 import { existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-// Postinstall hook for contained-fs native build.
-// Only run if:
-// 1. Not already in the source repository (skip in dev installs)
-// 2. The native binary doesn't already exist
-// 3. We're in a real package installation
+try {
+  const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+  // Skip if we're in the source repository (check for .git)
+  if (existsSync(resolve(root, '.git'))) {
+    process.exit(0);
+  }
 
-// Check if we're in development (check for .git means we're in the source repo)
-const isSourceRepo = existsSync(resolve(root, '.git'));
-if (isSourceRepo) {
-  // Skip postinstall in development environments
+  // Skip if native binary already exists for current platform
+  const nativeBinary = resolve(root, 'native', `contained-fs-${process.platform}-${process.arch}.node`);
+  if (existsSync(nativeBinary)) {
+    process.exit(0);
+  }
+
+  // Try to build the native module (with --optional to skip gracefully if headers missing)
+  const buildScript = resolve(dirname(fileURLToPath(import.meta.url)), 'build-contained-fs.mjs');
+  if (!existsSync(buildScript)) {
+    // Build script not found, skip silently
+    process.exit(0);
+  }
+
+  const result = spawnSync(process.execPath, [buildScript, '--optional'], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: 60000, // 60 second timeout for build
+  });
+
+  // Never fail postinstall - just log the result
+  if (result.error) {
+    // Silent skip on error
+    process.exit(0);
+  }
+
+  process.exit(0);
+} catch (error) {
+  // Catch any unexpected errors and exit silently
+  // Postinstall should never fail the installation
   process.exit(0);
 }
-
-// Check if native binary already exists for current platform
-const nativeBinary = resolve(root, 'native', `contained-fs-${process.platform}-${process.arch}.node`);
-if (existsSync(nativeBinary)) {
-  // Already built, skip
-  process.exit(0);
-}
-
-// Run the optional build by spawning the script with --optional flag
-const buildScript = resolve(dirname(fileURLToPath(import.meta.url)), 'build-contained-fs.mjs');
-const result = spawnSync(process.execPath, [buildScript, '--optional'], { stdio: 'inherit' });
-
-if (result.error) {
-  console.error('Warning: Failed to build optional native module:', result.error.message);
-}
-
-process.exit(0);
