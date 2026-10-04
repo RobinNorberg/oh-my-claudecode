@@ -367,20 +367,14 @@ jobs:
           fi
           echo "✓ postinstall hook configured"
 
-          # Test contained-fs verification on Ubuntu (native build possible)
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            echo "🔎 Testing contained-fs verification on installed package..."
-            TEST_PREFIX=$(mktemp -d)
-            trap "rm -rf $TEST_PREFIX" EXIT
-            npm install --prefix "$TEST_PREFIX" "./$TARBALL" --no-audit --no-fund 2>&1 | grep -v "^npm notice" | head -20
-            if [ -f "$TEST_PREFIX/node_modules/.bin/omc" ]; then
-              VERIFY_SCRIPT=$(find "$TEST_PREFIX/node_modules/oh-my-claude-sisyphus" -name verify-graph-contained-fs.mjs 2>/dev/null | head -1)
-              if [ -f "$VERIFY_SCRIPT" ]; then
-                echo "Running $VERIFY_SCRIPT on installed package..."
-                node "$VERIFY_SCRIPT" "$TEST_PREFIX/node_modules/.bin/omc" || echo "(postinstall native build may not be available in test environment)"
-              fi
-            fi
-          fi
+          # The postinstall hook must never break installing the published tarball.
+          # (The addon itself is darwin-only; its build is exercised by the macOS harness.)
+          echo "🔎 Installing packed tarball to verify postinstall does not fail..."
+          TEST_PREFIX=$(mktemp -d)
+          npm install --prefix "$TEST_PREFIX" "./$TARBALL" --no-audit --no-fund
+          test -f "$TEST_PREFIX/node_modules/oh-my-claude-sisyphus/scripts/postinstall-contained-fs.mjs"
+          rm -rf "$TEST_PREFIX"
+          echo "✓ packed tarball installs cleanly with postinstall hook"
 
           # ENOTEMPTY hardening (mirrors .github/workflows/upgrade-test.yml):
           # the global node_modules dir is reused across runs on GitHub-hosted

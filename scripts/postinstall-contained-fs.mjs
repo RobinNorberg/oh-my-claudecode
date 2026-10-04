@@ -36,15 +36,21 @@ if (existsSync(nativeBinary)) {
   process.exit(0);
 }
 
-// Attempt to build the optional native module on darwin
-try {
-  const buildScript = resolve(scriptDir, 'build-contained-fs.mjs');
-  spawnSync(process.execPath, [buildScript, '--optional'], {
-    stdio: 'ignore',
-    timeout: 120000,
-  });
-} catch {
-  // Silently ignore any errors - postinstall should never fail
+// Attempt to build the optional native module on darwin. A failed build must
+// not fail `npm install`, but it must tell the user how to recover.
+const buildScript = resolve(scriptDir, 'build-contained-fs.mjs');
+const result = spawnSync(process.execPath, [buildScript, '--optional'], {
+  stdio: ['ignore', 'ignore', 'pipe'],
+  timeout: 120000,
+});
+
+if (!existsSync(nativeBinary)) {
+  const detail = result.error?.message ?? result.stderr?.toString().trim().split('\n').pop() ?? '';
+  console.warn(
+    `[oh-my-claude-sisyphus] contained-fs native addon was not built${detail ? ` (${detail})` : ''}. ` +
+    `omc team/graph commands need it: run \`node scripts/build-contained-fs.mjs\` from ${packageRoot} ` +
+    '(requires Xcode Command Line Tools and Node headers).',
+  );
 }
 
 process.exit(0);
