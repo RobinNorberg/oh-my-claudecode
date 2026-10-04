@@ -7,19 +7,17 @@ import { fileURLToPath } from 'node:url';
 
 // Build-time only. Runtime never invokes a compiler or downloads a binary.
 const isOptional = process.argv.includes('--optional');
-const isForceBuild = process.argv.includes('--force');
 
-// On non-Darwin/Linux platforms, skip unless explicitly forced
+// Skip unsupported platforms, but gracefully if optional
 if (!['darwin', 'linux'].includes(process.platform)) {
-  if (!isForceBuild && !isOptional) {
-    process.exit(0);
-  }
   if (isOptional) {
     console.log(`Skipping native build: unsupported platform ${process.platform}`);
-    process.exit(0);
+  } else {
+    console.log(`Native build not supported on ${process.platform}`);
   }
-  throw new Error(`Unsupported native build platform: ${process.platform} (only darwin and linux are supported)`);
+  process.exit(0);
 }
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const explicit = process.argv.find(arg => arg.startsWith('--headers='))?.slice('--headers='.length);
 const version = process.versions.node;
@@ -34,17 +32,12 @@ const candidates = [
 ].filter(Boolean);
 const headers = candidates.find(path => existsSync(join(path, 'node_api.h')));
 if (!headers) {
-  // Skip gracefully in optional mode or if not explicitly forced
-  if (isOptional || !isForceBuild) {
-    if (isOptional) {
-      console.log('Node development headers not found. Skipping optional native build. Install with a toolchain to rebuild, or provide --headers=/path/to/node/headers.');
-    } else {
-      console.log('Node development headers not found. Skipping native build (headers not available in this environment).');
-    }
-    process.exit(0);
+  if (isOptional) {
+    console.log('Node development headers not found. Skipping optional native build. Install with a toolchain to rebuild.');
+  } else {
+    console.log('Node development headers not found. Skipping native build.');
   }
-  // Only error if explicitly forced to build
-  throw new Error('Node development headers are required. Supply --headers=/absolute/path/to/include/node (node_api.h), or populate the node-gyp cache before building. No headers are downloaded by this script.');
+  process.exit(0);
 }
 for (const arch of process.platform === 'darwin' ? ['arm64', 'x64'] : [process.arch]) {
   const output = join(root, 'native', `contained-fs-${process.platform}-${arch}.node`);

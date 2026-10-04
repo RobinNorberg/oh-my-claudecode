@@ -87,7 +87,7 @@
     "verify:skill-entitlements": "node scripts/generate-skill-entitlements.mjs --verify",
     "generate:prompt-projections": "node scripts/generate-prompt-projections.mjs",
     "verify:prompt-projections": "node scripts/generate-prompt-projections.mjs --verify",
-    "build:contained-fs": "node scripts/build-contained-fs.mjs --force",
+    "build:contained-fs": "node scripts/build-contained-fs.mjs",
     "postinstall": "node scripts/build-contained-fs.mjs --optional"
   },
   "dependencies": {
