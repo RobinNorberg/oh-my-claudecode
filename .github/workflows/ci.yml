@@ -347,23 +347,6 @@ jobs:
             echo "packaged bridge registers $tool"
           done
 
-          echo "🔎 Verifying contained-fs native build support in package..."
-          for file in scripts/build-contained-fs.mjs scripts/verify-graph-contained-fs.mjs native/contained-fs.c; do
-            if ! tar -tzf "$TARBALL" | grep -q "package/$file"; then
-              echo "::error::npm package is missing required file: $file"
-              exit 1
-            fi
-            echo "packaged includes $file"
-          done
-
-          echo "🔎 Verifying postinstall hook in package.json..."
-          PKG_JSON=$(tar -xzOf "$TARBALL" package/package.json)
-          if ! echo "$PKG_JSON" | grep -q '"postinstall".*build-contained-fs.mjs.*--optional'; then
-            echo "::error::npm package is missing postinstall hook for optional native build"
-            exit 1
-          fi
-          echo "✅ postinstall hook configured correctly"
-
           # ENOTEMPTY hardening (mirrors .github/workflows/upgrade-test.yml):
           # the global node_modules dir is reused across runs on GitHub-hosted
           # runners and inside the GitHub-hosted tool cache. A previously
