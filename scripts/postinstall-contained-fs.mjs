@@ -3,8 +3,8 @@
  * Optional postinstall hook for contained-fs native module.
  * 
  * Follows the same platform constraints as build-contained-fs.mjs:
- * - darwin: always attempt to build
- * - linux: skip gracefully (not built by default)
+ * - darwin: attempt to build native module
+ * - linux: skip (not built by default)
  * - other: skip gracefully
  * 
  * Also skips in development environments (when .git exists).
@@ -39,12 +39,17 @@ if (existsSync(nativeBinary)) {
 // Attempt to build the optional native module on darwin
 try {
   const buildScript = resolve(scriptDir, 'build-contained-fs.mjs');
-  spawnSync(process.execPath, [buildScript, '--optional'], {
-    stdio: 'ignore',
-    timeout: 120000,
+  const result = spawnSync(process.execPath, [buildScript, '--optional'], {
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
-} catch {
-  // Silently ignore any errors - postinstall should never fail
+
+  // Print warning if build skipped or failed
+  if (result.status !== 0 || result.error) {
+    console.warn('⚠ contained-fs native build skipped. To rebuild later, run:');
+    console.warn('  node scripts/build-contained-fs.mjs');
+  }
+} catch (error) {
+  // Silently ignore unexpected errors - postinstall should never fail
 }
 
 process.exit(0);
