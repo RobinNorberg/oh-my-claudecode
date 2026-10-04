@@ -8,14 +8,13 @@ import { fileURLToPath } from 'node:url';
 // Build-time only. Runtime never invokes a compiler or downloads a binary.
 const isOptional = process.argv.includes('--optional');
 
-// Skip unsupported platforms, but gracefully if optional
+// Check if platform is supported
 if (!['darwin', 'linux'].includes(process.platform)) {
   if (isOptional) {
     console.log(`Skipping native build: unsupported platform ${process.platform}`);
-  } else {
-    console.log(`Native build not supported on ${process.platform}`);
+    process.exit(0);
   }
-  process.exit(0);
+  throw new Error(`Unsupported native build platform: ${process.platform} (only darwin and linux are supported)`);
 }
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -30,15 +29,16 @@ const candidates = [
   '/usr/local/include/node',
   '/usr/include/node',
 ].filter(Boolean);
+
 const headers = candidates.find(path => existsSync(join(path, 'node_api.h')));
 if (!headers) {
   if (isOptional) {
-    console.log('Node development headers not found. Skipping optional native build. Install with a toolchain to rebuild.');
-  } else {
-    console.log('Node development headers not found. Skipping native build.');
+    console.log('Node development headers not found. Skipping optional native build. To rebuild later, install a C compiler and Node dev headers, then run: npm rebuild');
+    process.exit(0);
   }
-  process.exit(0);
+  throw new Error('Node development headers are required. Supply --headers=/absolute/path/to/include/node (node_api.h), or populate the node-gyp cache before building. No headers are downloaded by this script.');
 }
+
 for (const arch of process.platform === 'darwin' ? ['arm64', 'x64'] : [process.arch]) {
   const output = join(root, 'native', `contained-fs-${process.platform}-${arch}.node`);
   mkdirSync(dirname(output), { recursive: true });
