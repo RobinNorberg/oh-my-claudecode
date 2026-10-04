@@ -2,11 +2,12 @@
 /**
  * Optional postinstall hook for contained-fs native module.
  * 
- * This script is a no-op in development environments (when .git exists)
- * to avoid breaking npm install/ci workflows.
+ * Follows the same platform constraints as build-contained-fs.mjs:
+ * - darwin: always attempt to build
+ * - linux: skip gracefully (not built by default)
+ * - other: skip gracefully
  * 
- * When installed as a dependency (no .git), it will attempt to build
- * the native module if needed.
+ * Also skips in development environments (when .git exists).
  */
 
 import { existsSync } from 'node:fs';
@@ -18,22 +19,24 @@ import { fileURLToPath } from 'node:url';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(scriptDir, '..');
 
-// Check if we're in development (source repo has .git)
-const isSourceRepo = existsSync(resolve(packageRoot, '.git'));
-if (isSourceRepo) {
-  // Skip in development environment
+// Skip if we're in development (source repo has .git)
+if (existsSync(resolve(packageRoot, '.git'))) {
   process.exit(0);
 }
 
-// Check if native binary already exists
+// Skip on non-darwin platforms (consistent with build script default)
+if (process.platform !== 'darwin') {
+  process.exit(0);
+}
+
+// Check if native binary already exists for darwin
 const nativePath = `contained-fs-${process.platform}-${process.arch}.node`;
 const nativeBinary = resolve(packageRoot, 'native', nativePath);
 if (existsSync(nativeBinary)) {
-  // Already built
   process.exit(0);
 }
 
-// Attempt to build the optional native module
+// Attempt to build the optional native module on darwin
 try {
   const buildScript = resolve(scriptDir, 'build-contained-fs.mjs');
   spawnSync(process.execPath, [buildScript, '--optional'], {
