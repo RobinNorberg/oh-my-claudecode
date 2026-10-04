@@ -1488,7 +1488,7 @@ describe('team cli', () => {
     logSpy.mockRestore();
   });
 
-  it('team shutdown handles nonexistent team gracefully', async () => {
+  it('team shutdown handles nonexistent team gracefully and exits 0', async () => {
     const { teamCommand } = await import('../team.js');
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -1504,6 +1504,8 @@ describe('team cli', () => {
     // Should have logged a diagnostic message
     expect(logSpy).toHaveBeenCalledWith('No team state found for nonexistent-team');
     expect(errorSpy).not.toHaveBeenCalled();
+    // Should exit with code 0 (success)
+    expect(process.exitCode).not.toBe(1);
 
     // Restore original exit code
     process.exitCode = originalExitCode;
@@ -1512,6 +1514,94 @@ describe('team cli', () => {
     errorSpy.mockRestore();
   });
 
+  it('team shutdown cleans up partial-state team (config without valid instance_id) and exits 1', async () => {
+    const { cleanupAbandonedTeamState } = await import('../../team/runtime-v2.js');
+    const { teamStateRoot } = await import('../../team/state-paths.js');
+    const { mkdir, writeFile } = await import('fs/promises');
+    const { join } = await import('path');
+
+    const cwd = makeProject('omc-team-cli-partial-state-');
+    const teamName = 'partial-team';
+    const teamRoot = teamStateRoot(cwd, teamName);
+    await mkdir(teamRoot, { recursive: true });
+
+    // Create a config file without instance_id (simulating partial startup failure)
+    const config = {
+      name: teamName,
+      task: 'test',
+      agent_type: 'executor',
+      worker_count: 0,
+      max_workers: 20,
+      workers: [],
+      created_at: new Date().toISOString(),
+      next_task_id: 1,
+    };
+    await writeFile(join(teamRoot, 'config.json'), JSON.stringify(config));
+
+    // Verify state exists before cleanup
+    expect(existsSync(teamRoot)).toBe(true);
+
+    // Call the cleanup function
+    await cleanupAbandonedTeamState(teamName, cwd);
+
+    // State should be completely removed
+    expect(existsSync(teamRoot)).toBe(false);
+
+    rmSync(cwd, { recursive: true, force: true });
+  });
+
+  it('cleanupStaleReservations removes dead-owner reservation but NOT live-owner reservation', async () => {
+    const { cleanupStaleReservations } = await import('../../team/runtime-v2.js');
+    const { currentProcessStartIdentity } = await import('../../team/team-owner-epoch.js');
+    const { teamInstanceLifecycleLockPath } = await import('../../team/team-instance.js');
+    const { TeamPaths, teamWorkspaceHash, canonicalTeamStatePath } = await import('../../team/state-paths.js');
+    const { mkdir, writeFile } = await import('fs/promises');
+    const { join } = await import('path');
+
+    const cwd = makeProject('omc-team-cli-stale-reservation-');
+    const teamName = 'stale-test-team';
+    const workspaceHash = teamWorkspaceHash(cwd, teamName);
+    const reservationPath = canonicalTeamStatePath(cwd, TeamPaths.teamInstanceReservation(workspaceHash, teamName));
+    const currentIdentity = currentProcessStartIdentity(process.pid);
+
+    // Create directory for reservation
+    await mkdir(join(reservationPath, '..'), { recursive: true });
+
+    // Test 1: Dead-owner reservation should be removed
+    const deadOwnerRes = {
+      schema_version: 1,
+      kind: 'team-instance-reservation',
+      instance_id: '11111111-1111-4111-8111-111111111111',
+      team_name: teamName,
+      cwd,
+      workspace_hash: workspaceHash,
+      state_root: join(cwd, '.omc', 'state', 'team', teamName),
+      phase: 'pending' as const,
+      owner: {
+        pid: 99999, // Dead PID (guaranteed to be unavailable)
+        process_started_at: 'linux:99999', // Valid format for linux
+        nonce: 'test-nonce',
+      },
+      reservation_path: reservationPath,
+      lifecycle_lock_path: teamInstanceLifecycleLockPath(cwd, teamName),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    await writeFile(reservationPath, JSON.stringify(deadOwnerRes));
+    await cleanupStaleReservations(teamName, cwd);
+    // Dead-owner reservation should be gone
+    expect(existsSync(reservationPath)).toBe(false);
+
+    // Test 2: Live-owner reservation should NOT be removed
+    const currentOwnerRes = { ...deadOwnerRes, owner: { pid: process.pid, process_started_at: currentIdentity, nonce: 'nonce' } };
+    await writeFile(reservationPath, JSON.stringify(currentOwnerRes));
+    await cleanupStaleReservations(teamName, cwd);
+    // Live-owner reservation should remain
+    expect(existsSync(reservationPath)).toBe(true);
+
+    process.exitCode = 0;
+    rmSync(cwd, { recursive: true, force: true });
+  });
 
   it('legacy shorthand start alias supports optional ralph token', async () => {
     const write = vi.fn();
