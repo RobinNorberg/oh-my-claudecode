@@ -1488,6 +1488,30 @@ describe('team cli', () => {
     logSpy.mockRestore();
   });
 
+  it('team shutdown handles nonexistent team gracefully', async () => {
+    const { teamCommand } = await import('../team.js');
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const cwd = makeProject('omc-team-cli-nonexistent-shutdown-');
+    const originalExitCode = process.exitCode;
+    process.exitCode = 0; // Reset before test
+
+    // Attempting to shutdown a team that doesn't exist should not throw
+    // but should exit gracefully with a diagnostic message
+    await teamCommand(['shutdown', 'nonexistent-team', '--cwd', cwd]);
+
+    // Should have logged a diagnostic message
+    expect(logSpy).toHaveBeenCalledWith('No team state found for nonexistent-team');
+    expect(errorSpy).not.toHaveBeenCalled();
+
+    // Restore original exit code
+    process.exitCode = originalExitCode;
+    rmSync(cwd, { recursive: true, force: true });
+    logSpy.mockRestore();
+    errorSpy.mockRestore();
+  });
+
 
   it('legacy shorthand start alias supports optional ralph token', async () => {
     const write = vi.fn();
