@@ -476,14 +476,24 @@ describe('git-guardrails hook', () => {
     });
   });
 
-  describe('worker-thread optimization (fast-paths)', () => {
+  describe('skip paths keep blocking semantics (#4221)', () => {
+    it('quote- and escape-split git spellings are still blocked', async () => {
+      for (const command of ['g\\it push origin main', '"g"it push origin main', 'git pu""sh origin main']) {
+        const result = await runHook(command, {
+          OMC_GIT_GUARDRAILS: '1',
+        });
+        expect(result.code, command).toBe(2);
+        expect(result.stderr, command).toContain('Git guardrail: blocked "git push"');
+      }
+    });
+
     it('non-git commands exit quickly without state checks', async () => {
       const result = await runHook('npm install', {});
       expect(result.code).toBe(0);
       expect(result.stderr).toBe('');
     });
 
-    it('OMC_GIT_GUARDRAILS=0 pre-check exits immediately without worker overhead', async () => {
+    it('OMC_GIT_GUARDRAILS=0 exits without blocking', async () => {
       const result = await runHook('git push origin main', {
         OMC_GIT_GUARDRAILS: '0',
       });
@@ -507,7 +517,7 @@ describe('git-guardrails hook', () => {
       expect(result.stderr).toBe('');
     });
 
-    it('case-insensitive git detection: GIT command is handled', async () => {
+    it('uppercase GIT command is still blocked', async () => {
       const result = await runHook('GIT push origin main', {
         OMC_GIT_GUARDRAILS: '1',
       });
@@ -515,7 +525,7 @@ describe('git-guardrails hook', () => {
       expect(result.stderr).toContain('Git guardrail');
     });
 
-    it('safe git commands pass through fast-path', async () => {
+    it('safe git commands pass through', async () => {
       const result = await runHook('git status', {
         OMC_GIT_GUARDRAILS: '1',
       });
@@ -523,7 +533,7 @@ describe('git-guardrails hook', () => {
       expect(result.stderr).toBe('');
     });
 
-    it('git reset --hard is blocked through worker', async () => {
+    it('git reset --hard is blocked', async () => {
       const result = await runHook('git reset --hard HEAD~1', {
         OMC_GIT_GUARDRAILS: '1',
       });
@@ -531,7 +541,7 @@ describe('git-guardrails hook', () => {
       expect(result.stderr).toContain('git reset --hard');
     });
 
-    it('git clean -f is blocked through worker', async () => {
+    it('git clean -f is blocked', async () => {
       const result = await runHook('git clean -f', {
         OMC_GIT_GUARDRAILS: '1',
       });
@@ -539,7 +549,7 @@ describe('git-guardrails hook', () => {
       expect(result.stderr).toContain('git clean -f');
     });
 
-    it('git checkout . is blocked through worker', async () => {
+    it('git checkout . is blocked', async () => {
       const result = await runHook('git checkout .', {
         OMC_GIT_GUARDRAILS: '1',
       });
@@ -547,7 +557,7 @@ describe('git-guardrails hook', () => {
       expect(result.stderr).toContain('checkout');
     });
 
-    it('git restore . is blocked through worker', async () => {
+    it('git restore . is blocked', async () => {
       const result = await runHook('git restore .', {
         OMC_GIT_GUARDRAILS: '1',
       });
@@ -555,7 +565,7 @@ describe('git-guardrails hook', () => {
       expect(result.stderr).toContain('restore');
     });
 
-    it('git branch -D is blocked through worker', async () => {
+    it('git branch -D is blocked', async () => {
       const result = await runHook('git branch -D feature', {
         OMC_GIT_GUARDRAILS: '1',
       });

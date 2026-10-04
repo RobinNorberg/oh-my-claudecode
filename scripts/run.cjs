@@ -932,16 +932,11 @@ import(targetUrl).then(
 `;
 
 /**
- * Pre-check for git-guardrails.mjs: quickly determine if hook should run
- * without spawning a worker. Returns null to proceed with worker, or 0 to exit.
- *
- * Fast-path: OMC_GIT_GUARDRAILS=0 or stdin contains no 'git' → exit 0 immediately.
- *
- * Note: Best-effort check; odd spellings and complex quoting may not be detected.
+ * git-guardrails.mjs is a no-op when explicitly disabled; skip starting its
+ * worker entirely. Returns 0 to exit, or null to run the worker.
  */
 function gitGuardrailsPreCheck() {
   if (process.env.OMC_GIT_GUARDRAILS === '0') return 0;
-  // Could add cheap stdin scan here, but deferred to worker for determinism
   return null;
 }
 
