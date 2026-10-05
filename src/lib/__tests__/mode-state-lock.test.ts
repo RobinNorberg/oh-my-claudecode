@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { getProcessStartIdentitySync } from '../../platform/process-utils.js';
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { tmpdir } from 'node:os';
@@ -25,7 +25,12 @@ vi.mock('fs', async importOriginal => {
   };
 });
 
-import { getStateMutationLockFailureMessage, withStateFileMutationLock } from '../mode-state-io.js';
+import {
+  captureStateFileGeneration,
+  clearStateFileLocked,
+  getStateMutationLockFailureMessage,
+  withStateFileMutationLock,
+} from '../mode-state-io.js';
 
 const directories: string[] = [];
 
@@ -72,5 +77,54 @@ describe('state mutation lock fallback', () => {
     expect(result).toEqual({ acquired: false, value: undefined });
     expect(JSON.parse(readFileSync(lockPath, 'utf8'))).toEqual(fsControl.replacement);
     expect(getStateMutationLockFailureMessage()).toContain('contention');
+  });
+});
+
+describe('generation-bound clear', () => {
+  function capturedState(): { statePath: string; generation: NonNullable<ReturnType<typeof captureStateFileGeneration>>['generation'] } {
+    const directory = mkdtempSync(join(tmpdir(), 'mode-state-generation-'));
+    directories.push(directory);
+    const statePath = join(directory, 'state.json');
+    writeFileSync(statePath, JSON.stringify({ active: true }));
+    const captured = captureStateFileGeneration(statePath);
+    if (!captured) throw new Error('state generation unavailable');
+    return { statePath, generation: captured.generation };
+  }
+
+  function asPlatform<T>(platform: NodeJS.Platform, run: () => T): T {
+    const original = process.platform;
+    Object.defineProperty(process, 'platform', { configurable: true, value: platform });
+    try {
+      return run();
+    } finally {
+      Object.defineProperty(process, 'platform', { configurable: true, value: original });
+    }
+  }
+
+  // Prime the cached own-process identity on the real platform so the
+  // simulated platform below only affects the identity comparison.
+  function primeLockIdentity(): void {
+    const { statePath } = capturedState();
+    expect(clearStateFileLocked(statePath)).toBe(true);
+  }
+
+  it('captures generations with exact BigInt ids', () => {
+    const { generation } = capturedState();
+    expect(typeof generation.dev).toBe('bigint');
+    expect(typeof generation.ino).toBe('bigint');
+  });
+
+  it('clears a generation whose dev was reported as 0 on win32 (#4156)', () => {
+    primeLockIdentity();
+    const { statePath, generation } = capturedState();
+    expect(asPlatform('win32', () => clearStateFileLocked(statePath, { ...generation, dev: 0n }))).toBe(true);
+    expect(existsSync(statePath)).toBe(false);
+  });
+
+  it('still refuses a generation with a different ino under zero-dev tolerance', () => {
+    primeLockIdentity();
+    const { statePath, generation } = capturedState();
+    expect(asPlatform('win32', () => clearStateFileLocked(statePath, { ...generation, dev: 0n, ino: generation.ino + 2n }))).toBe(false);
+    expect(existsSync(statePath)).toBe(true);
   });
 });

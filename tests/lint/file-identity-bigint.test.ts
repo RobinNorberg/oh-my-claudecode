@@ -35,4 +35,10 @@ describe('file identity helpers stat with BigInt ids', () => {
     expect(functionBody(mjs, 'function sameArtifactIdentity(a, b)')).toContain("process.platform === 'win32' && (a.dev === 0n || b.dev === 0n)");
     expect(mjs).not.toMatch(/\.dev [!=]== \w+\.dev (\|\||&&) \w+\.ino/);
   });
+
+  it('mode-state-io compares every identity, including state generations, through sameFileIdentity', () => {
+    const ts = read('src', 'lib', 'mode-state-io.ts');
+    expect(functionBody(ts, 'function sameStateFileGeneration(')).toContain('sameFileIdentity(identity, expected)');
+    expect(ts).not.toMatch(/\.dev [!=]== \w+\.dev (\|\||&&) \w+\.ino/);
+  });
 });

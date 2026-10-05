@@ -1119,7 +1119,7 @@ export function captureStateFileGeneration(path: string): CapturedStateFile | nu
 function sameStateFileGeneration(path: string, expected: StateFileGeneration): boolean {
   try {
     const identity = fileIdentity(path);
-    if (!identity || identity.dev !== expected.dev || identity.ino !== expected.ino) return false;
+    if (!identity || !sameFileIdentity(identity, expected)) return false;
     return stateDigest(readFileSync(path, 'utf8')) === expected.digest;
   } catch {
     return false;
