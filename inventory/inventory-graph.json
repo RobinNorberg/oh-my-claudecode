@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "aadaf4c762e816765888e8b876ded1d0307778ba",
-    "sourceSha256": "0b50d9ef83820d6e366a6b2ec2fc8d2c3ad0dfdb2490adf77b6bf78e1405cd17",
+    "head": "8341ea53b752aef016a756514042dd2d589b4223",
+    "sourceSha256": "d5a7e12de6e5da843cf46af86dabbaca29c3754e73ca8743db0294331eefda3a",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "aadaf4c762e816765888e8b876ded1d0307778ba",
-  "sourceSha256": "0b50d9ef83820d6e366a6b2ec2fc8d2c3ad0dfdb2490adf77b6bf78e1405cd17",
+  "head": "8341ea53b752aef016a756514042dd2d589b4223",
+  "sourceSha256": "d5a7e12de6e5da843cf46af86dabbaca29c3754e73ca8743db0294331eefda3a",
   "counts": {
     "public": {
       "skills": 47,
@@ -42356,6 +42356,11 @@
         "path": "tests/lint/fable-routing-docs.test.ts"
       },
       {
+        "id": "tests/lint/file-identity-bigint.test.ts",
+        "kind": "other",
+        "path": "tests/lint/file-identity-bigint.test.ts"
+      },
+      {
         "id": "tests/lint/handoffs-writers.test.ts",
         "kind": "other",
         "path": "tests/lint/handoffs-writers.test.ts"
@@ -69739,6 +69744,11 @@
       },
       {
         "from": "src/lib/__tests__/mode-state-lock.test.ts",
+        "to": "scripts/lib/state-lock.mjs",
+        "kind": "imports"
+      },
+      {
+        "from": "src/lib/__tests__/mode-state-lock.test.ts",
         "to": "src/lib/mode-state-io.ts",
         "kind": "imports"
       },
@@ -83453,6 +83463,21 @@
         "kind": "imports"
       },
       {
+        "from": "tests/lint/file-identity-bigint.test.ts",
+        "to": "external:node:fs",
+        "kind": "imports"
+      },
+      {
+        "from": "tests/lint/file-identity-bigint.test.ts",
+        "to": "external:node:path",
+        "kind": "imports"
+      },
+      {
+        "from": "tests/lint/file-identity-bigint.test.ts",
+        "to": "external:vitest",
+        "kind": "imports"
+      },
+      {
         "from": "tests/lint/handoffs-writers.test.ts",
         "to": "external:node:fs",
         "kind": "imports"
@@ -83769,12 +83794,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7177,
-      "edgeCount": 8261,
-      "importEdgeCount": 6828,
+      "nodeCount": 7178,
+      "edgeCount": 8265,
+      "importEdgeCount": 6832,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "e9a73dbbfbfeee32b392e922fbf0c11c6a1c707ca7be22f23026fc42fe1c6faa",
-  "manifestSha256": "a050d85b2fca72c14ac9d009ebebc2ef31363cdf6879a960e599243372cb0be7"
+  "inventorySha256": "e6bfd87f57fad33b819624b5c195e38dde9e0c1bd752ce8be267311e592d9716",
+  "manifestSha256": "1aafa6314b5544677398aba81b79d25b3afa2a3e3dad27f5bac31eea4fe1b734"
 }
