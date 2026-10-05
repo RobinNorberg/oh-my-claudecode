@@ -341,15 +341,16 @@ refresh_cache() {
 # Hot path: return immediately from the last successful render for this session.
 if [ -s "$OUTPUT_FILE" ]; then
   cat "$OUTPUT_FILE" 2>/dev/null || printf '[OMC] Starting...\n'
-  
+
   # Skip refresh if cache is younger than the minimum refresh age.
   min_age=${OMC_HUD_MIN_REFRESH_SECONDS:-15}
   now=$(date +%s 2>/dev/null || printf '0')
   out_mtime=$(file_mtime "$OUTPUT_FILE")
-  if [ "$min_age" -gt 0 ] 2>/dev/null && [ "$now" -gt 0 ] && [ -n "$out_mtime" ]     && [ $((now - out_mtime)) -lt "$min_age" ]; then
+  if [ "$min_age" -gt 0 ] 2>/dev/null && [ "$now" -gt 0 ] && [ -n "$out_mtime" ] \
+    && [ $((now - out_mtime)) -lt "$min_age" ]; then
     exit 0
   fi
-  
+
   if try_acquire_lock; then
     if [ "${OMC_HUD_SYNC_REFRESH:-0}" = "1" ]; then
       refresh_cache

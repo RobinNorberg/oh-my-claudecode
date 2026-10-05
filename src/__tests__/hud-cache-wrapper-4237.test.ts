@@ -69,8 +69,11 @@ describe('HUD cache wrapper fast path (issue #4237)', () => {
     const hudScript = join(tempRoot, 'fake-hud.mjs');
     writeFileSync(hudScript, `process.stdin.resume(); process.stdin.on('end', () => console.log('${newLine}'));`);
 
+    // Multi-line payload without a trailing newline: the fast path consumed stdin,
+    // so the stock path must persist exactly these bytes.
+    const payload = `{"session_id":"${sessionId}",\n"cwd":"${tempRoot}"}`;
     const output = execFileSync('sh', [wrapperPath, hudScript], {
-      input: JSON.stringify({ session_id: sessionId, cwd: tempRoot }),
+      input: payload,
       encoding: 'utf8',
       env: {
         ...process.env,
@@ -85,6 +88,7 @@ describe('HUD cache wrapper fast path (issue #4237)', () => {
     // With SYNC_REFRESH, that refresh happens synchronously, updating the cache file.
     expect(output).toBe(`${cachedLine}\n`);
     expect(readFileSync(join(cacheDir, `statusline.${sessionId}.txt`), 'utf8')).toBe(`${newLine}\n`);
+    expect(readFileSync(join(cacheDir, `stdin.${sessionId}.json`), 'utf8')).toBe(payload);
 
     rmSync(tempRoot, { recursive: true, force: true });
   });
