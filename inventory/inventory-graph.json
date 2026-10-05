@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "b6f8de076c6ebdbc510c8885c7ca0d158675b063",
-    "sourceSha256": "6b0bf06311f7e1c4cb2955646f390a0658f63410efa118b06915f84f1e043172",
+    "head": "65c8552edbd8b0025d50ca07774dadc7871e0084",
+    "sourceSha256": "f6cb036d89154dc3134eb3e02eaafb1a39d5f8d1615941636023182240c64c0b",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "b6f8de076c6ebdbc510c8885c7ca0d158675b063",
-  "sourceSha256": "6b0bf06311f7e1c4cb2955646f390a0658f63410efa118b06915f84f1e043172",
+  "head": "65c8552edbd8b0025d50ca07774dadc7871e0084",
+  "sourceSha256": "f6cb036d89154dc3134eb3e02eaafb1a39d5f8d1615941636023182240c64c0b",
   "counts": {
     "public": {
       "skills": 47,
@@ -801,6 +801,7 @@
       "scripts/context-guard-stop.mjs",
       "scripts/context-safety.mjs",
       "scripts/demo-team.mjs",
+      "scripts/dev/repro-state-lock.mjs",
       "scripts/eval-autoresearch-json.mjs",
       "scripts/eval-autoresearch-timed-json.mjs",
       "scripts/find-node.sh",
@@ -33881,6 +33882,11 @@
         "path": "scripts/demo-team.mjs"
       },
       {
+        "id": "scripts/dev/repro-state-lock.mjs",
+        "kind": "script",
+        "path": "scripts/dev/repro-state-lock.mjs"
+      },
+      {
         "id": "scripts/eval-autoresearch-json.mjs",
         "kind": "script",
         "path": "scripts/eval-autoresearch-json.mjs"
@@ -43275,6 +43281,36 @@
       {
         "from": "scripts/demo-team.mjs",
         "to": "dist/team/runtime.js",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:child_process",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:fs",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:os",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:path",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:url",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "scripts/lib/state-lock.mjs",
         "kind": "imports"
       },
       {
@@ -83784,12 +83820,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7178,
-      "edgeCount": 8263,
-      "importEdgeCount": 6830,
+      "nodeCount": 7179,
+      "edgeCount": 8269,
+      "importEdgeCount": 6836,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "d43b25ede3b111f5fd5fa5e328e8e5a0d72388655e48170d713a9e447f2b52c4",
-  "manifestSha256": "bcd17890f78e55489f45708b0e53a89137b9aacb5f0722bfd31e2c58788badfa"
+  "inventorySha256": "3905c33c3e2bfccec19ab1d165f56726a39f8e39802ce53f736c7484bb218bdb",
+  "manifestSha256": "f1256d41e026c1371e0930f99cf17a5a425965837a1e687236ef4c619a8f4d8c"
 }
