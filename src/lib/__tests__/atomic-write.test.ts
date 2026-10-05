@@ -331,34 +331,4 @@ describe('atomicWriteJson', () => {
     expect(withStateFileLockSync(filePath, () => 'written')).toEqual({ acquired: false, value: undefined });
     expect(existsSync(`${filePath}.mutation.lock`)).toBe(true);
   });
-
-  it('skips directory fsync on Windows to avoid EPERM (#3744)', () => {
-    const directory = mkdtempSync(join(tmpdir(), 'atomic-write-windows-fsync-'));
-    directories.push(directory);
-    const filePath = join(directory, 'state.json');
-    const originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
-    
-    try {
-      // Mock process.platform to return 'win32'
-      Object.defineProperty(process, 'platform', {
-        value: 'win32',
-        writable: true,
-        configurable: true,
-      });
-
-      // This should not throw EPERM or any directory-related error on Windows
-      expect(() => atomicWriteFileSync(filePath, 'test content')).not.toThrow();
-      expect(readFileSync(filePath, 'utf8')).toBe('test content');
-
-      // Verify the batch write variant also works on Windows
-      const filePath2 = join(directory, 'state2.json');
-      expect(() => atomicWriteBatchSync([{ path: filePath2, content: 'batch content' }])).not.toThrow();
-      expect(readFileSync(filePath2, 'utf8')).toBe('batch content');
-    } finally {
-      // Restore original platform descriptor
-      if (originalPlatform) {
-        Object.defineProperty(process, 'platform', originalPlatform);
-      }
-    }
-  });
 });

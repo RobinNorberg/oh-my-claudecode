@@ -298,18 +298,15 @@ export async function atomicWriteJson(
     removeBackup(backupPath);
 
     // Best-effort directory fsync to ensure rename is durable
-    // Skip on Windows as it doesn't support directory fsync and throws EPERM
-    if (process.platform !== "win32") {
+    try {
+      const dirFd = await fs.open(dir, "r");
       try {
-        const dirFd = await fs.open(dir, "r");
-        try {
-          await dirFd.sync();
-        } finally {
-          await dirFd.close();
-        }
-      } catch {
-        // Some platforms don't support directory fsync - that's okay
+        await dirFd.sync();
+      } finally {
+        await dirFd.close();
       }
+    } catch {
+      // Some platforms don't support directory fsync - that's okay
     }
   } finally {
     // Clean up temp file on error
@@ -411,22 +408,19 @@ export function atomicWriteFileSync(
     removeBackup(backupPath, operations);
 
     // Best-effort directory fsync to ensure rename is durable
-    // Skip on Windows as it doesn't support directory fsync and throws EPERM
-    if (process.platform !== "win32") {
-      try {
-        if (operations) {
-          operations.sync();
-        } else {
-          const dirFd = fsSync.openSync(dir, "r");
-          try {
-            fsSync.fsyncSync(dirFd);
-          } finally {
-            fsSync.closeSync(dirFd);
-          }
+    try {
+      if (operations) {
+        operations.sync();
+      } else {
+        const dirFd = fsSync.openSync(dir, "r");
+        try {
+          fsSync.fsyncSync(dirFd);
+        } finally {
+          fsSync.closeSync(dirFd);
         }
-      } catch {
-        // Some platforms don't support directory fsync - that's okay
       }
+    } catch {
+      // Some platforms don't support directory fsync - that's okay
     }
   } finally {
     // Close fd if still open
@@ -573,19 +567,16 @@ export function atomicWriteBatchSync(
       renamedDirectories.add(write.dir);
     }
 
-    // Skip directory fsync on Windows as it doesn't support it and throws EPERM
-    if (process.platform !== "win32") {
-      for (const dir of renamedDirectories) {
+    for (const dir of renamedDirectories) {
+      try {
+        const dirFd = fsSync.openSync(dir, "r");
         try {
-          const dirFd = fsSync.openSync(dir, "r");
-          try {
-            fsSync.fsyncSync(dirFd);
-          } finally {
-            fsSync.closeSync(dirFd);
-          }
-        } catch {
-          // Some platforms do not support directory fsync.
+          fsSync.fsyncSync(dirFd);
+        } finally {
+          fsSync.closeSync(dirFd);
         }
+      } catch {
+        // Some platforms do not support directory fsync.
       }
     }
   } finally {
