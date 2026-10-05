@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "8341ea53b752aef016a756514042dd2d589b4223",
-    "sourceSha256": "d5a7e12de6e5da843cf46af86dabbaca29c3754e73ca8743db0294331eefda3a",
+    "head": "ea0bdb9755c4461f0786d2cc50fdc9b243723289",
+    "sourceSha256": "fea6dd899cb6851f57562e568e9c9253e15d3d81860a580d001af81a656eb3a4",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "8341ea53b752aef016a756514042dd2d589b4223",
-  "sourceSha256": "d5a7e12de6e5da843cf46af86dabbaca29c3754e73ca8743db0294331eefda3a",
+  "head": "ea0bdb9755c4461f0786d2cc50fdc9b243723289",
+  "sourceSha256": "fea6dd899cb6851f57562e568e9c9253e15d3d81860a580d001af81a656eb3a4",
   "counts": {
     "public": {
       "skills": 47,
@@ -28,8 +28,8 @@
       "toolFiles": 61,
       "libFiles": 47,
       "templateHooks": 23,
-      "srcFiles": 1435,
-      "total": 1458
+      "srcFiles": 1436,
+      "total": 1459
     },
     "generated": {
       "distFiles": 5096,
@@ -801,6 +801,7 @@
       "scripts/context-guard-stop.mjs",
       "scripts/context-safety.mjs",
       "scripts/demo-team.mjs",
+      "scripts/dev/repro-state-lock.mjs",
       "scripts/eval-autoresearch-json.mjs",
       "scripts/eval-autoresearch-timed-json.mjs",
       "scripts/find-node.sh",
@@ -33881,6 +33882,11 @@
         "path": "scripts/demo-team.mjs"
       },
       {
+        "id": "scripts/dev/repro-state-lock.mjs",
+        "kind": "script",
+        "path": "scripts/dev/repro-state-lock.mjs"
+      },
+      {
         "id": "scripts/eval-autoresearch-json.mjs",
         "kind": "script",
         "path": "scripts/eval-autoresearch-json.mjs"
@@ -36759,6 +36765,11 @@
         "id": "src/cli/commands/__tests__/factory-init.test.ts",
         "kind": "src",
         "path": "src/cli/commands/__tests__/factory-init.test.ts"
+      },
+      {
+        "id": "src/cli/commands/__tests__/intake-headless-flag.test.ts",
+        "kind": "src",
+        "path": "src/cli/commands/__tests__/intake-headless-flag.test.ts"
       },
       {
         "id": "src/cli/commands/__tests__/intake.test.ts",
@@ -43275,6 +43286,36 @@
       {
         "from": "scripts/demo-team.mjs",
         "to": "dist/team/runtime.js",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:child_process",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:fs",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:os",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:path",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "external:node:url",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/dev/repro-state-lock.mjs",
+        "to": "scripts/lib/state-lock.mjs",
         "kind": "imports"
       },
       {
@@ -54080,6 +54121,16 @@
       {
         "from": "src/cli/commands/__tests__/factory-init.test.ts",
         "to": "src/hooks/session-end/chain-enqueuer.ts",
+        "kind": "imports"
+      },
+      {
+        "from": "src/cli/commands/__tests__/intake-headless-flag.test.ts",
+        "to": "external:vitest",
+        "kind": "imports"
+      },
+      {
+        "from": "src/cli/commands/__tests__/intake-headless-flag.test.ts",
+        "to": "src/cli/commands/intake.ts",
         "kind": "imports"
       },
       {
@@ -83794,12 +83845,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7178,
-      "edgeCount": 8265,
-      "importEdgeCount": 6832,
+      "nodeCount": 7180,
+      "edgeCount": 8273,
+      "importEdgeCount": 6840,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "e6bfd87f57fad33b819624b5c195e38dde9e0c1bd752ce8be267311e592d9716",
-  "manifestSha256": "1aafa6314b5544677398aba81b79d25b3afa2a3e3dad27f5bac31eea4fe1b734"
+  "inventorySha256": "338a93eb621b8e1025072bbd59212415ebff437e2b76708eccc2f8c30efef4ee",
+  "manifestSha256": "bf099f5355b9aeb21d6931d3b2196c8cfe494d68bb59fa40974b20a67e02017a"
 }
