@@ -15,8 +15,10 @@ export async function runWikiSessionEndHook() {
   }
 
   try {
-    const { processWikiSessionEnd } = await import('../dist/hooks/session-end/index.js');
-    const result = await processWikiSessionEnd(frame.value);
+    // Lean bootstrap, not the full SessionEnd index graph: this hook runs inside
+    // run.cjs's 300ms SessionEnd foreground budget (same split as session-end.mjs).
+    const { publishWikiSessionEndBootstrap } = await import('../dist/hooks/session-end/wiki-foreground-bootstrap.js');
+    const result = await publishWikiSessionEndBootstrap(frame.value);
     console.log(JSON.stringify(result));
   } catch (error) {
     console.error('[wiki-session-end] Error:', error.message);
