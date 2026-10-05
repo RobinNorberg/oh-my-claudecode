@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "aadaf4c762e816765888e8b876ded1d0307778ba",
-    "sourceSha256": "0b50d9ef83820d6e366a6b2ec2fc8d2c3ad0dfdb2490adf77b6bf78e1405cd17",
+    "head": "8341ea53b752aef016a756514042dd2d589b4223",
+    "sourceSha256": "afecf3508f64bdcf9b7ca54e6a650423b32ffa0b2599ada8da5a252e8cc70afb",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "aadaf4c762e816765888e8b876ded1d0307778ba",
-  "sourceSha256": "0b50d9ef83820d6e366a6b2ec2fc8d2c3ad0dfdb2490adf77b6bf78e1405cd17",
+  "head": "8341ea53b752aef016a756514042dd2d589b4223",
+  "sourceSha256": "afecf3508f64bdcf9b7ca54e6a650423b32ffa0b2599ada8da5a252e8cc70afb",
   "counts": {
     "public": {
       "skills": 47,
@@ -28,8 +28,8 @@
       "toolFiles": 61,
       "libFiles": 47,
       "templateHooks": 23,
-      "srcFiles": 1435,
-      "total": 1458
+      "srcFiles": 1436,
+      "total": 1459
     },
     "generated": {
       "distFiles": 5096,
@@ -36761,6 +36761,11 @@
         "path": "src/cli/commands/__tests__/factory-init.test.ts"
       },
       {
+        "id": "src/cli/commands/__tests__/intake-headless-flag.test.ts",
+        "kind": "src",
+        "path": "src/cli/commands/__tests__/intake-headless-flag.test.ts"
+      },
+      {
         "id": "src/cli/commands/__tests__/intake.test.ts",
         "kind": "src",
         "path": "src/cli/commands/__tests__/intake.test.ts"
@@ -54075,6 +54080,16 @@
       {
         "from": "src/cli/commands/__tests__/factory-init.test.ts",
         "to": "src/hooks/session-end/chain-enqueuer.ts",
+        "kind": "imports"
+      },
+      {
+        "from": "src/cli/commands/__tests__/intake-headless-flag.test.ts",
+        "to": "external:vitest",
+        "kind": "imports"
+      },
+      {
+        "from": "src/cli/commands/__tests__/intake-headless-flag.test.ts",
+        "to": "src/cli/commands/intake.ts",
         "kind": "imports"
       },
       {
@@ -83769,12 +83784,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7177,
-      "edgeCount": 8261,
-      "importEdgeCount": 6828,
+      "nodeCount": 7178,
+      "edgeCount": 8263,
+      "importEdgeCount": 6830,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "e9a73dbbfbfeee32b392e922fbf0c11c6a1c707ca7be22f23026fc42fe1c6faa",
-  "manifestSha256": "a050d85b2fca72c14ac9d009ebebc2ef31363cdf6879a960e599243372cb0be7"
+  "inventorySha256": "d43b25ede3b111f5fd5fa5e328e8e5a0d72388655e48170d713a9e447f2b52c4",
+  "manifestSha256": "641e18ab42c7c8cdb255f38d8c947bd331607aaea6cf2c4a17ee8ca2fd311fda"
 }
