@@ -180,11 +180,13 @@ function sameOwner(left: MutationLockOwner | null, right: MutationLockOwner): bo
   return left !== null && left.pid === right.pid && left.processStart === right.processStart && left.nonce === right.nonce;
 }
 
-type LockArtifactIdentity = { dev: number; ino: number };
+// BigInt ids: NTFS file IDs exceed 2^53 once the MFT sequence number reaches
+// 32, and a Number ino rounds distinct files onto the same value.
+type LockArtifactIdentity = { dev: bigint; ino: bigint };
 
 function lockArtifactIdentity(path: string): LockArtifactIdentity | null {
   try {
-    const stats = statSync(path);
+    const stats = statSync(path, { bigint: true });
     return stats.isFile() ? { dev: stats.dev, ino: stats.ino } : null;
   } catch {
     return null;
@@ -207,7 +209,7 @@ function reclaimDeadLockOwner(
   // Verify the file at path still has the expected identity before renaming.
   // If it has changed, another process has published a replacement and we must not remove it.
   const current = lockArtifactIdentity(path);
-  if (!current || current.dev !== observedIdentity.dev || current.ino !== observedIdentity.ino) {
+  if (!current || !sameFileIdentity(current, observedIdentity)) {
     return 'changed';
   }
   try {
@@ -225,8 +227,7 @@ function reclaimDeadLockOwner(
       movedOwner !== 'absent' &&
       movedOwner !== null &&
       movedIdentity !== null &&
-      movedIdentity.dev === observedIdentity.dev &&
-      movedIdentity.ino === observedIdentity.ino &&
+      sameFileIdentity(movedIdentity, observedIdentity) &&
       sameOwner(movedOwner, observedOwner)
     ) {
       try {
@@ -389,7 +390,7 @@ function acquireFileLockAt(path: string, attempts: number): MutationLock | null 
       }
       // Re-verify the identity hasn't changed before probing liveness.
       const recheck = lockArtifactIdentity(path);
-      if (!recheck || recheck.dev !== observedIdentity.dev || recheck.ino !== observedIdentity.ino) continue;
+      if (!recheck || !sameFileIdentity(recheck, observedIdentity)) continue;
       const live = ownerLive(existing);
       if (live === null) {
         lastMutationLockFailure = 'unverifiable';
@@ -869,12 +870,12 @@ type EmergencyMutationJournal = {
   phase: 'preparing' | 'prepared' | 'quarantined' | 'published';
 };
 
-type FileIdentity = { dev: number; ino: number };
+type FileIdentity = { dev: bigint; ino: bigint };
 
 /** A stable file generation used to bind cleanup to one publication. */
 export interface StateFileGeneration {
-  dev: number;
-  ino: number;
+  dev: bigint;
+  ino: bigint;
   digest: string;
 }
 
@@ -1083,7 +1084,7 @@ function readEmergencyJournal(path: string): EmergencyMutationJournal | null {
 
 function fileIdentity(path: string): FileIdentity | null {
   try {
-    const stat = statSync(path);
+    const stat = statSync(path, { bigint: true });
     return { dev: stat.dev, ino: stat.ino };
   } catch { return null; }
 }
