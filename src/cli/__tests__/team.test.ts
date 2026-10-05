@@ -31,6 +31,10 @@ function paneArtifact(
   };
 }
 
+// Dead-owner reservations need a start identity valid on the host platform:
+// isProcessIdentityDead rejects foreign-platform tokens (e.g. linux:* on win32).
+const DEAD_OWNER_START_IDENTITY = process.platform === 'darwin' ? 'darwin:99999:0' : `${process.platform}:99999`;
+
 function makeProject(prefix: string): string {
   const cwd = mkdtempSync(join(tmpdir(), prefix));
   execFileSync('git', ['init'], { cwd, stdio: 'pipe' });
@@ -1555,7 +1559,7 @@ describe('team cli', () => {
       workspace_hash: workspaceHash,
       state_root: teamRoot,
       phase: 'pending' as const,
-      owner: { pid: 99999, process_started_at: 'linux:99999', nonce: 'test' },
+      owner: { pid: 99999, process_started_at: DEAD_OWNER_START_IDENTITY, nonce: 'test' },
       reservation_path: reservationPath,
       lifecycle_lock_path: lockPath,
       created_at: new Date().toISOString(),
@@ -1603,7 +1607,7 @@ describe('team cli', () => {
       workspace_hash: workspaceHash,
       state_root: join(cwd, '.omc', 'state', 'team', teamName),
       phase: 'pending' as const,
-      owner: { pid: 99999, process_started_at: 'linux:99999', nonce: 'test-nonce' },
+      owner: { pid: 99999, process_started_at: DEAD_OWNER_START_IDENTITY, nonce: 'test-nonce' },
       reservation_path: reservationPath,
       lifecycle_lock_path: teamInstanceLifecycleLockPath(cwd, teamName),
       created_at: new Date().toISOString(),
@@ -1661,7 +1665,7 @@ describe('team cli', () => {
       phase: 'pending' as const,
       owner: {
         pid: 99999, // Dead PID (guaranteed to be unavailable)
-        process_started_at: 'linux:99999', // Valid format for linux
+        process_started_at: DEAD_OWNER_START_IDENTITY, // Valid format for this platform
         nonce: 'test-nonce',
       },
       reservation_path: reservationPath,
