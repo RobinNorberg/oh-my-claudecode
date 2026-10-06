@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
@@ -167,7 +167,6 @@ describe('SessionEnd run.cjs process exit regressions (#3477)', () => {
     vi.stubEnv('HOME', cwd);
     vi.stubEnv('USERPROFILE', cwd);
     vi.stubEnv('OMC_STATE_DIR', '');
-    execFileSync('git', ['init', '--quiet'], { cwd, stdio: 'ignore' });
     writeFileSync(join(cwd, 'transcript.jsonl'), '');
     mkdirSync(getOmcRoot(cwd), { recursive: true });
     return cwd;
@@ -303,8 +302,18 @@ describe('SessionEnd run.cjs process exit regressions (#3477)', () => {
 
   it('wiki-session-end loads the lean wiki bootstrap, not the full SessionEnd index graph', () => {
     const script = readFileSync(join(REPO_ROOT, 'scripts', 'wiki-session-end.mjs'), 'utf-8');
-    expect(script).toContain("import('../dist/hooks/session-end/wiki-foreground-bootstrap.js')");
+    // The script may only load lean modules that already ship in the committed
+    // dist closure (a new dist file would need an owner-signed artifact commit).
+    const distImports = [...script.matchAll(/import\('(\.\.\/dist\/[^']+)'\)/g)].map((m) => m[1]).sort();
+    expect(distImports).toEqual([
+      '../dist/hooks/session-end/cleanup-manifest.js',
+      '../dist/hooks/session-end/worker.js',
+      '../dist/hooks/wiki/session-hooks.js',
+      '../dist/lib/worktree-paths.js',
+    ]);
     expect(script).not.toContain('session-end/index.js');
+    // Worker loads only after the intent is sealed.
+    expect(script.indexOf('sealWikiManifest(directory')).toBeLessThan(script.indexOf("import('../dist/hooks/session-end/worker.js')"));
     const bootstrap = readFileSync(join(REPO_ROOT, 'src', 'hooks', 'session-end', 'wiki-foreground-bootstrap.ts'), 'utf-8');
     expect(bootstrap).not.toMatch(/from '\.\/index\.js'|import\('\.\/index\.js'\)/);
   });
