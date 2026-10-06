@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { spawn } from 'node:child_process';
+import { spawn, execFileSync } from 'node:child_process';
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
@@ -167,6 +167,7 @@ describe('SessionEnd run.cjs process exit regressions (#3477)', () => {
     vi.stubEnv('HOME', cwd);
     vi.stubEnv('USERPROFILE', cwd);
     vi.stubEnv('OMC_STATE_DIR', '');
+    execFileSync('git', ['init', '--quiet'], { cwd, stdio: 'ignore' });
     writeFileSync(join(cwd, 'transcript.jsonl'), '');
     mkdirSync(getOmcRoot(cwd), { recursive: true });
     return cwd;
