@@ -1,13 +1,9 @@
 /**
- * Regression tests for HUD transcript TaskCreate/TaskUpdate handling.
+ * #4242: HUD todos from Claude Code's Task tools (TaskCreate / TaskUpdate).
  *
- * Covers support for Claude Code's Task tool system which replaces
- * TodoWrite in current versions. TaskCreate and TaskUpdate work with
- * an insertion-ordered todo list that persists across the session.
- *
- * TaskCreate: creates a pending todo with subject/description/activeForm.
- * TaskUpdate: modifies status, subject, or activeForm; "deleted" removes.
- * Interaction: TodoWrite replaces the full list; Task tools apply on top.
+ * TaskCreate carries no id in its input; the id arrives in the paired
+ * tool_result ("Task #<id> created successfully: <subject>"). TaskUpdate
+ * addresses items by taskId. TodoWrite keeps its full-list replace semantics.
  */
 import { afterEach, describe, expect, it } from "vitest";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
@@ -15,711 +11,194 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 import { parseTranscript } from "../../hud/transcript.js";
+import { renderTodosWithCurrent } from "../../hud/elements/todos.js";
 
 const tempDirs: string[] = [];
+let seq = 0;
 
-function createTempTranscript(lines: unknown[]): string {
+afterEach(() => {
+  while (tempDirs.length > 0) {
+    rmSync(tempDirs.pop()!, { recursive: true, force: true });
+  }
+});
+
+function ts(): string {
+  seq += 1;
+  return new Date(Date.UTC(2026, 9, 6, 0, 0, seq)).toISOString();
+}
+
+function toolUse(id: string, name: string, input: unknown) {
+  return {
+    timestamp: ts(),
+    message: { role: "assistant", content: [{ type: "tool_use", id, name, input }] },
+  };
+}
+
+function toolResult(toolUseId: string, content: unknown, isError = false) {
+  return {
+    timestamp: ts(),
+    message: {
+      role: "user",
+      content: [
+        { type: "tool_result", tool_use_id: toolUseId, content, ...(isError ? { is_error: true } : {}) },
+      ],
+    },
+  };
+}
+
+function create(n: number, subject: string, extra: Record<string, unknown> = {}, name = "TaskCreate") {
+  return [
+    toolUse(`toolu_c${n}`, name, { subject, description: `${subject} details`, ...extra }),
+    toolResult(`toolu_c${n}`, `Task #${n} created successfully: ${subject}`),
+  ];
+}
+
+let updateSeq = 0;
+function update(input: Record<string, unknown>, name = "TaskUpdate") {
+  updateSeq += 1;
+  const id = `toolu_u${updateSeq}`;
+  return [toolUse(id, name, input), toolResult(id, "Updated task")];
+}
+
+async function parse(lines: unknown[]) {
   const dir = mkdtempSync(join(tmpdir(), "omc-hud-task-tools-"));
   tempDirs.push(dir);
   const p = join(dir, "transcript.jsonl");
   writeFileSync(p, `${lines.map((l) => JSON.stringify(l)).join("\n")}\n`, "utf8");
-  return p;
+  return parseTranscript(p);
 }
 
-afterEach(() => {
-  while (tempDirs.length > 0) {
-    const d = tempDirs.pop();
-    if (d) rmSync(d, { recursive: true, force: true });
-  }
-});
+describe("HUD transcript — TaskCreate/TaskUpdate (#4242)", () => {
+  it("renders the issue repro: 3 creates then TaskUpdate taskId 1 -> in_progress", async () => {
+    const result = await parse([
+      ...create(1, "Write parser", { activeForm: "Writing parser" }),
+      ...create(2, "Add tests"),
+      ...create(3, "Open PR"),
+      ...update({ taskId: "1", status: "in_progress" }),
+    ]);
 
-describe("HUD transcript — TaskCreate/TaskUpdate", () => {
-  describe("TaskCreate basics", () => {
-    it("adds a pending todo when TaskCreate tool_result succeeds", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_001",
-                name: "TaskCreate",
-                input: { subject: "Fix HUD todos rendering" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_001",
-                content: [{ type: "text", text: "Task #1234 created successfully." }],
-              },
-            ],
-          },
-        },
-      ]);
-
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.content).toBe("Fix HUD todos rendering");
-      expect(result.todos[0]?.status).toBe("pending");
-    });
-
-    it("ignores TaskCreate with error result", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_err",
-                name: "TaskCreate",
-                input: { subject: "Failing task" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_err",
-                content: [{ type: "text", text: "Error: invalid subject" }],
-                is_error: true,
-              },
-            ],
-          },
-        },
-      ]);
-
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(0);
-    });
-
-    it("uses activeForm when provided", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_form",
-                name: "TaskCreate",
-                input: {
-                  subject: "Refactor parser",
-                  activeForm: "Extract parsing logic",
-                },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_form",
-                content: [{ type: "text", text: "Task #2000 created." }],
-              },
-            ],
-          },
-        },
-      ]);
-
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.content).toBe("Extract parsing logic");
-      expect(result.todos[0]?.activeForm).toBe("Extract parsing logic");
-    });
-
-    it("preserves status from TaskCreate input", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_status",
-                name: "TaskCreate",
-                input: { subject: "Already started task", status: "in_progress" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_status",
-                content: [{ type: "text", text: "Task #3000 created." }],
-              },
-            ],
-          },
-        },
-      ]);
-
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.status).toBe("in_progress");
-    });
+    expect(result.todos).toEqual([
+      { content: "Write parser", status: "in_progress", activeForm: "Writing parser" },
+      { content: "Add tests", status: "pending" },
+      { content: "Open PR", status: "pending" },
+    ]);
+    const rendered = renderTodosWithCurrent(result.todos)!;
+    expect(rendered).toContain("0/3");
+    expect(rendered).toContain("(working: Writing parser)");
   });
 
-  describe("TaskCreate with proxy_TaskCreate", () => {
-    it("handles proxy_TaskCreate like TaskCreate", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_proxy_tc",
-                name: "proxy_TaskCreate",
-                input: { subject: "Proxied task creation" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_proxy_tc",
-                content: [{ type: "text", text: "Task #4000 created." }],
-              },
-            ],
-          },
-        },
-      ]);
+  it("tracks progress through completion and falls back to subject without activeForm", async () => {
+    const result = await parse([
+      ...create(1, "Write parser"),
+      ...create(2, "Add tests"),
+      ...update({ taskId: "1", status: "completed" }),
+      ...update({ taskId: "2", status: "in_progress" }),
+    ]);
 
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.content).toBe("Proxied task creation");
-    });
+    expect(result.todos.map((t) => t.status)).toEqual(["completed", "in_progress"]);
+    const rendered = renderTodosWithCurrent(result.todos)!;
+    expect(rendered).toContain("1/2");
+    expect(rendered).toContain("(working: Add tests)");
   });
 
-  describe("TaskUpdate basics", () => {
-    it("updates status of existing task", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_upd1",
-                name: "TaskCreate",
-                input: { subject: "Pending work" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_upd1",
-                content: [{ type: "text", text: "Task #5000 created." }],
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:02.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_001",
-                name: "TaskUpdate",
-                input: { taskId: "5000", subject: "Pending work", status: "in_progress" },
-              },
-            ],
-          },
-        },
-      ]);
+  it("applies subject and activeForm updates by id", async () => {
+    const result = await parse([
+      ...create(1, "Old subject"),
+      ...update({ taskId: "1", subject: "New subject", activeForm: "Doing new subject" }),
+    ]);
 
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.status).toBe("in_progress");
-    });
-
-    it("marks task as completed", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_comp",
-                name: "TaskCreate",
-                input: { subject: "Task to complete" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_comp",
-                content: [{ type: "text", text: "Task #6000 created." }],
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:02.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_comp",
-                name: "TaskUpdate",
-                input: { taskId: "6000", subject: "Task to complete", status: "completed" },
-              },
-            ],
-          },
-        },
-      ]);
-
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.status).toBe("completed");
-    });
-
-    it("removes task with deleted status", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_del",
-                name: "TaskCreate",
-                input: { subject: "Task to delete" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_del",
-                content: [{ type: "text", text: "Task #7000 created." }],
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:02.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_del",
-                name: "TaskUpdate",
-                input: { taskId: "7000", subject: "Task to delete", status: "deleted" },
-              },
-            ],
-          },
-        },
-      ]);
-
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(0);
-    });
-
-    it("gracefully ignores unknown task IDs", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_unknown",
-                name: "TaskUpdate",
-                input: { taskId: "unknown-id", subject: "Non-existent task", status: "completed" },
-              },
-            ],
-          },
-        },
-      ]);
-
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(0);
-    });
+    expect(result.todos).toEqual([
+      { content: "New subject", status: "pending", activeForm: "Doing new subject" },
+    ]);
   });
 
-  describe("TaskUpdate with proxy_TaskUpdate", () => {
-    it("handles proxy_TaskUpdate like TaskUpdate", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_proxy_upd",
-                name: "TaskCreate",
-                input: { subject: "Task for proxy update" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_proxy_upd",
-                content: [{ type: "text", text: "Task #8000 created." }],
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:02.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_proxy_tu",
-                name: "proxy_TaskUpdate",
-                input: { taskId: "8000", subject: "Task for proxy update", status: "completed" },
-              },
-            ],
-          },
-        },
-      ]);
+  it("removes a task on status deleted, even when the update has no subject", async () => {
+    const result = await parse([
+      ...create(1, "Keep"),
+      ...create(2, "Drop"),
+      ...update({ taskId: "2", status: "deleted" }),
+    ]);
 
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.status).toBe("completed");
-    });
+    expect(result.todos.map((t) => t.content)).toEqual(["Keep"]);
   });
 
-  describe("TodoWrite + Task tools interaction", () => {
-    it("TodoWrite replaces list, Task tools apply on top", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tw_full",
-                name: "TodoWrite",
-                input: {
-                  todos: [
-                    { content: "Original task 1", status: "pending" },
-                    { content: "Original task 2", status: "pending" },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_new",
-                name: "TaskCreate",
-                input: { subject: "Additional task" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:02.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_new",
-                content: [{ type: "text", text: "Task #9000 created." }],
-              },
-            ],
-          },
-        },
-      ]);
+  it("ignores updates for unknown ids and unknown statuses", async () => {
+    const result = await parse([
+      ...create(1, "Only task"),
+      ...update({ taskId: "99", status: "completed" }),
+      ...update({ taskId: "1", status: "bogus" }),
+    ]);
 
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(3);
-      expect(result.todos[0]?.content).toBe("Original task 1");
-      expect(result.todos[1]?.content).toBe("Original task 2");
-      expect(result.todos[2]?.content).toBe("Additional task");
-    });
+    expect(result.todos).toEqual([{ content: "Only task", status: "pending" }]);
   });
 
-  describe("Multi-step workflows", () => {
-    it("creates 3 tasks, marks one in_progress, completes another", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_1",
-                name: "TaskCreate",
-                input: { subject: "Task 1" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_1",
-                content: [{ type: "text", text: "Task #10001 created." }],
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:02.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_2",
-                name: "TaskCreate",
-                input: { subject: "Task 2" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:03.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_2",
-                content: [{ type: "text", text: "Task #10002 created." }],
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:04.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_3",
-                name: "TaskCreate",
-                input: { subject: "Task 3" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:05.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_3",
-                content: [{ type: "text", text: "Task #10003 created." }],
-              },
-            ],
-          },
-        },
-        // Update Task 1 to in_progress
-        {
-          timestamp: "2026-04-07T00:00:06.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_1",
-                name: "TaskUpdate",
-                input: { taskId: "10001", subject: "Task 1", status: "in_progress" },
-              },
-            ],
-          },
-        },
-        // Complete Task 3
-        {
-          timestamp: "2026-04-07T00:00:07.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_3",
-                name: "TaskUpdate",
-                input: { taskId: "10003", subject: "Task 3", status: "completed" },
-              },
-            ],
-          },
-        },
-      ]);
+  it("accepts a numeric taskId", async () => {
+    const result = await parse([
+      ...create(7, "Numeric"),
+      ...update({ taskId: 7, status: "completed" }),
+    ]);
 
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(3);
-      expect(result.todos[0]?.status).toBe("in_progress");
-      expect(result.todos[1]?.status).toBe("pending");
-      expect(result.todos[2]?.status).toBe("completed");
-    });
+    expect(result.todos).toEqual([{ content: "Numeric", status: "completed" }]);
   });
 
-  describe("Task tool with missing result", () => {
-    it("ignores TaskCreate if result never arrives", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_orphan",
-                name: "TaskCreate",
-                input: { subject: "Orphaned task" },
-              },
-            ],
-          },
-        },
-        // No tool_result follows
-      ]);
+  it("adds nothing when TaskCreate errors or its result never arrives", async () => {
+    const result = await parse([
+      toolUse("toolu_err", "TaskCreate", { subject: "Failed" }),
+      toolResult("toolu_err", "Error: could not create task", true),
+      toolUse("toolu_orphan", "TaskCreate", { subject: "Orphan" }),
+    ]);
 
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      // Pending task is not finalized without a successful tool_result
-      expect(result.todos).toHaveLength(0);
-    });
+    expect(result.todos).toEqual([]);
   });
 
-  describe("Complex task state transitions", () => {
-    it("handles pending → in_progress → completed sequence", async () => {
-      const transcriptPath = createTempTranscript([
-        {
-          timestamp: "2026-04-07T00:00:00.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tc_complex",
-                name: "TaskCreate",
-                input: { subject: "Complex workflow task" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:01.000Z",
-          message: {
-            role: "user",
-            content: [
-              {
-                type: "tool_result",
-                tool_use_id: "toolu_tc_complex",
-                content: [{ type: "text", text: "Task #11000 created." }],
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:02.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_c1",
-                name: "TaskUpdate",
-                input: { taskId: "11000", subject: "Complex workflow task", status: "in_progress" },
-              },
-            ],
-          },
-        },
-        {
-          timestamp: "2026-04-07T00:00:03.000Z",
-          message: {
-            role: "assistant",
-            content: [
-              {
-                type: "tool_use",
-                id: "toolu_tu_c2",
-                name: "TaskUpdate",
-                input: { taskId: "11000", subject: "Complex workflow task", status: "completed" },
-              },
-            ],
-          },
-        },
-      ]);
+  it("reads the id from array-form tool_result content", async () => {
+    const result = await parse([
+      toolUse("toolu_arr", "TaskCreate", { subject: "Array result" }),
+      toolResult("toolu_arr", [{ type: "text", text: "Task #4 created successfully: Array result" }]),
+      ...update({ taskId: "4", status: "in_progress" }),
+    ]);
 
-      const result = await parseTranscript(transcriptPath, { staleTaskThresholdMinutes: 10 ** 9 });
-      expect(result.todos).toHaveLength(1);
-      expect(result.todos[0]?.status).toBe("completed");
-    });
+    expect(result.todos).toEqual([{ content: "Array result", status: "in_progress" }]);
+  });
+
+  it("handles proxy_TaskCreate / proxy_TaskUpdate", async () => {
+    const result = await parse([
+      ...create(1, "Proxied", {}, "proxy_TaskCreate"),
+      ...update({ taskId: "1", status: "completed" }, "proxy_TaskUpdate"),
+    ]);
+
+    expect(result.todos).toEqual([{ content: "Proxied", status: "completed" }]);
+  });
+
+  it("TodoWrite replaces the list and drops earlier task ids; later Task tools apply on top", async () => {
+    const result = await parse([
+      ...create(1, "From task tool"),
+      toolUse("toolu_tw", "TodoWrite", {
+        todos: [{ content: "From TodoWrite", status: "in_progress", activeForm: "Writing" }],
+      }),
+      ...update({ taskId: "1", status: "completed" }),
+      ...create(2, "After TodoWrite"),
+    ]);
+
+    expect(result.todos).toEqual([
+      { content: "From TodoWrite", status: "in_progress", activeForm: "Writing" },
+      { content: "After TodoWrite", status: "pending" },
+    ]);
+  });
+
+  it("keeps TodoWrite-only transcripts unchanged", async () => {
+    const result = await parse([
+      toolUse("toolu_tw", "TodoWrite", {
+        todos: [
+          { content: "A", status: "completed" },
+          { content: "B", status: "pending" },
+        ],
+      }),
+    ]);
+
+    expect(result.todos.map((t) => [t.content, t.status])).toEqual([
+      ["A", "completed"],
+      ["B", "pending"],
+    ]);
   });
 });

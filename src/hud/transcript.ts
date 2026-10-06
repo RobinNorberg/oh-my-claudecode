@@ -65,16 +65,28 @@ const PERMISSION_THRESHOLD_MS = 3000; // 3 seconds
 const pendingPermissionMap = new Map<string, PendingPermission>();
 
 /**
- * Module-level map tracking pending TaskCreate operations.
- * Key: tool_use block id, Value: pending TodoItem with partial data
- * When the corresponding tool_result arrives with task ID, finalize the item.
+ * Per-parse Task-tool state (#4242). TaskCreate/TaskUpdate are incremental,
+ * unlike TodoWrite's full-list replace, so items are indexed by task id.
+ * Keyed by the parse's `latestTodos` array so state never leaks across parses.
  */
-interface PendingTaskCreate {
-  content: string;
-  activeForm?: string;
-  status: TodoItem["status"];
+interface TaskToolState {
+  /** TaskCreate tool_use id -> item awaiting its "Task #<id> created" result */
+  pendingCreates: Map<string, TodoItem>;
+  /** task id -> item currently in latestTodos */
+  byId: Map<string, TodoItem>;
 }
-const pendingTaskCreateMap = new Map<string, PendingTaskCreate>();
+const taskToolStates = new WeakMap<TodoItem[], TaskToolState>();
+
+function getTaskToolState(latestTodos: TodoItem[]): TaskToolState {
+  let state = taskToolStates.get(latestTodos);
+  if (!state) {
+    state = { pendingCreates: new Map(), byId: new Map() };
+    taskToolStates.set(latestTodos, state);
+  }
+  return state;
+}
+
+const TASK_STATUSES = new Set<TodoItem["status"]>(["pending", "in_progress", "completed"]);
 
 /**
  * Content block types that indicate extended thinking mode.
@@ -368,13 +380,12 @@ function extractTaskIdFromTaskCreateResult(
   let text = "";
   if (typeof content === "string") {
     text = content;
-  } else if (Array.isArray(content) && content.length > 0) {
-    const firstBlock = content[0] as { text?: string };
-    if (firstBlock?.text) {
-      text = firstBlock.text;
-    }
+  } else if (Array.isArray(content)) {
+    text = content
+      .map((b) => (typeof b?.text === "string" ? b.text : ""))
+      .join("\n");
   }
-  const match = /Task #([^\s]+)\s+created/.exec(text);
+  const match = /Task #([^\s:]+) created/.exec(text);
   return match ? match[1] : null;
 }
 
@@ -623,6 +634,7 @@ function processEntry(
         if (input?.todos && Array.isArray(input.todos)) {
           // Replace latest todos with new ones; Task tools apply on top
           latestTodos.length = 0;
+          taskToolStates.get(latestTodos)?.byId.clear();
           latestTodos.push(
             ...input.todos.map((t) => ({
               content: t.content,
@@ -633,45 +645,30 @@ function processEntry(
         }
       } else if (block.name === "TaskCreate" || block.name === "proxy_TaskCreate") {
         const input = block.input as TaskCreateInput | undefined;
-        if (input?.subject) {
-          // TaskCreate input has subject/description but no id yet.
-          // Hold pending by tool_use id; on tool_result, extract id and finalize.
-          pendingTaskCreateMap.set(block.id, {
-            content: input.activeForm || input.subject,
-            activeForm: input.activeForm,
-            status: (input.status as TodoItem["status"]) || "pending",
+        if (block.id && typeof input?.subject === "string" && input.subject) {
+          // The task id only appears in the paired tool_result.
+          getTaskToolState(latestTodos).pendingCreates.set(block.id, {
+            content: input.subject,
+            status: "pending",
+            ...(input.activeForm ? { activeForm: input.activeForm } : {}),
           });
         }
       } else if (block.name === "TaskUpdate" || block.name === "proxy_TaskUpdate") {
         const input = block.input as TaskUpdateInput | undefined;
-        if (input?.taskId) {
-          // TaskUpdate applies incremental changes: status, subject, activeForm
-          // Status "deleted" removes the item; unknown ids are ignored gracefully.
-          // Note: we match by taskId but in this HUD we display by content.
-          // In a full implementation, we'd maintain a taskId -> TodoItem map.
+        const taskId = input?.taskId == null ? "" : String(input.taskId);
+        const state = getTaskToolState(latestTodos);
+        const item = taskId ? state.byId.get(taskId) : undefined;
+        if (input && item) {
           if (input.status === "deleted") {
-            // Search for todo to delete (simplified: find by subject if provided)
-            if (input.subject) {
-              const idx = latestTodos.findIndex((t) => t.content === input.subject);
-              if (idx >= 0) {
-                latestTodos.splice(idx, 1);
-              }
-            }
-            // If no subject, skip (can't identify which todo to delete without ID tracking)
+            const idx = latestTodos.indexOf(item);
+            if (idx >= 0) latestTodos.splice(idx, 1);
+            state.byId.delete(taskId);
           } else {
-            // For simplicity, find existing todo by subject (or create behavior)
-            // In practice, OMC would maintain a taskId -> index map
-            if (input.subject) {
-              const existing = latestTodos.find((t) => t.content === input.subject || t.content === input.activeForm);
-              if (existing) {
-                if (input.status) existing.status = input.status as TodoItem["status"];
-                if (input.activeForm) existing.activeForm = input.activeForm;
-                // Update content to activeForm if provided, else keep subject
-                if (input.activeForm || input.subject) {
-                  existing.content = input.activeForm || input.subject;
-                }
-              }
+            if (input.status && TASK_STATUSES.has(input.status as TodoItem["status"])) {
+              item.status = input.status as TodoItem["status"];
             }
+            if (typeof input.subject === "string" && input.subject) item.content = input.subject;
+            if (typeof input.activeForm === "string" && input.activeForm) item.activeForm = input.activeForm;
           }
         }
       } else if (block.name === "Skill" || block.name === "proxy_Skill") {
@@ -706,20 +703,21 @@ function processEntry(
       // Clear from pending permissions when tool_result arrives
       pendingPermissionMap.delete(block.tool_use_id);
 
-      // Handle TaskCreate tool_result: extract task ID from response and finalize todo
-      const pendingTask = pendingTaskCreateMap.get(block.tool_use_id);
-      if (pendingTask && block.content && !block.is_error) {
-        // Parse "Task #<id> created" from tool_result content
-        const taskIdMatch = extractTaskIdFromTaskCreateResult(block.content);
-        if (taskIdMatch) {
-          // Finalize the pending task and add to todos
+      // Finalize TaskCreate once its result names the task id (#4242)
+      const taskState = taskToolStates.get(latestTodos);
+      const pendingTask = taskState?.pendingCreates.get(block.tool_use_id);
+      if (taskState && pendingTask) {
+        taskState.pendingCreates.delete(block.tool_use_id);
+        const taskId = block.is_error || !block.content
+          ? null
+          : extractTaskIdFromTaskCreateResult(block.content);
+        if (taskId) {
+          const previous = taskState.byId.get(taskId);
+          const prevIdx = previous ? latestTodos.indexOf(previous) : -1;
+          if (prevIdx >= 0) latestTodos.splice(prevIdx, 1);
+          taskState.byId.set(taskId, pendingTask);
           latestTodos.push(pendingTask);
         }
-        // Remove from pending whether successful or not (error results don't add)
-        pendingTaskCreateMap.delete(block.tool_use_id);
-      } else if (pendingTask && block.is_error) {
-        // TaskCreate error: don't add to todos, just clean up
-        pendingTaskCreateMap.delete(block.tool_use_id);
       }
 
       const agent = agentMap.get(block.tool_use_id);
@@ -858,11 +856,10 @@ interface TaskCreateInput {
   subject?: string;
   description?: string;
   activeForm?: string;
-  status?: string;
 }
 
 interface TaskUpdateInput {
-  taskId: string;
+  taskId?: string | number;
   status?: string;
   subject?: string;
   description?: string;
