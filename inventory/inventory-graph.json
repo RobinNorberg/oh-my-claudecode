@@ -5,14 +5,14 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "5c68735c8b28cdc7f4a8075a91bb25b0231bcec2",
+    "head": "ef370f274ef8354562d43e55e5e2bf473c7705ea",
     "sourceSha256": "25a9faebe7e8c151061f35a7373d11ae579c8004c8c94241526816d25af8381f",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "5c68735c8b28cdc7f4a8075a91bb25b0231bcec2",
+  "head": "ef370f274ef8354562d43e55e5e2bf473c7705ea",
   "sourceSha256": "25a9faebe7e8c151061f35a7373d11ae579c8004c8c94241526816d25af8381f",
   "counts": {
     "public": {
@@ -32,9 +32,9 @@
       "total": 1464
     },
     "generated": {
-      "distFiles": 5611,
+      "distFiles": 5615,
       "bridgeFiles": 9,
-      "total": 5620
+      "total": 5624
     },
     "prompt": {
       "promptLikeFiles": 61
@@ -4150,6 +4150,10 @@
       "dist/hooks/session-end/spawn-next.d.ts.map",
       "dist/hooks/session-end/spawn-next.js",
       "dist/hooks/session-end/spawn-next.js.map",
+      "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts",
+      "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts.map",
+      "dist/hooks/session-end/wiki-foreground-bootstrap.js",
+      "dist/hooks/session-end/wiki-foreground-bootstrap.js.map",
       "dist/hooks/session-end/worker.d.ts",
       "dist/hooks/session-end/worker.d.ts.map",
       "dist/hooks/session-end/worker.js",
@@ -24224,6 +24228,26 @@
         "id": "dist/hooks/session-end/spawn-next.js.map",
         "kind": "generated-dist",
         "path": "dist/hooks/session-end/spawn-next.js.map"
+      },
+      {
+        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts"
+      },
+      {
+        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts.map",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts.map"
+      },
+      {
+        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.js",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.js"
+      },
+      {
+        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.js.map",
+        "kind": "generated-dist",
+        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.js.map"
       },
       {
         "id": "dist/hooks/session-end/worker.d.ts",
@@ -87109,12 +87133,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7701,
+      "nodeCount": 7705,
       "edgeCount": 8301,
       "importEdgeCount": 6867,
       "registerEdgeCount": 68
     }
   },
   "inventorySha256": "8765eccb250057f2b7a9a5bb325e062f3144c7432fd64edf9dddccb277f84089",
-  "manifestSha256": "fd90739c495daa1a21411cb1c28767983cfc27126e2b5b215fa69b15ff06bbed"
+  "manifestSha256": "b513553fa9e8a1766c3f35e2c2da27a82a6a319e9adf6c18b66c417c6b4faedb"
 }
