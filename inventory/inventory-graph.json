@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "ba0c67c2fe0c78453dac198b95fdf72bc21fc853",
-    "sourceSha256": "792eab87889f46752d8b9e8dd6d2134484edd935e125dc8e0ff1099aee7b917c",
+    "head": "789b6f93df2138ccd3eb22e47c431f71044d5e89",
+    "sourceSha256": "34ef9267d5bf2c5e796e4c3ddd4f7dc3be5273169f546c6ce2cbc4e897972be9",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "ba0c67c2fe0c78453dac198b95fdf72bc21fc853",
-  "sourceSha256": "792eab87889f46752d8b9e8dd6d2134484edd935e125dc8e0ff1099aee7b917c",
+  "head": "789b6f93df2138ccd3eb22e47c431f71044d5e89",
+  "sourceSha256": "34ef9267d5bf2c5e796e4c3ddd4f7dc3be5273169f546c6ce2cbc4e897972be9",
   "counts": {
     "public": {
       "skills": 47,
@@ -23,13 +23,13 @@
       "total": 96
     },
     "internal": {
-      "hookFiles": 338,
+      "hookFiles": 336,
       "featureFiles": 84,
       "toolFiles": 61,
       "libFiles": 47,
       "templateHooks": 23,
-      "srcFiles": 1441,
-      "total": 1464
+      "srcFiles": 1439,
+      "total": 1462
     },
     "generated": {
       "distFiles": 5611,
@@ -41,7 +41,7 @@
     },
     "skills": 47,
     "commands": 21,
-    "hookFiles": 338,
+    "hookFiles": 336,
     "workflows": 8,
     "agentDefinitions": 18,
     "promptLikeFiles": 61
@@ -415,7 +415,6 @@
       "src/hooks/session-end/__tests__/spawn-next.test.ts",
       "src/hooks/session-end/__tests__/subdirectory-cwd.test.ts",
       "src/hooks/session-end/__tests__/team-cleanup.test.ts",
-      "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
       "src/hooks/session-end/__tests__/worker.test.ts",
       "src/hooks/session-end/action-runner.ts",
       "src/hooks/session-end/action-watchdog.ts",
@@ -428,7 +427,6 @@
       "src/hooks/session-end/index.ts",
       "src/hooks/session-end/routing.ts",
       "src/hooks/session-end/spawn-next.ts",
-      "src/hooks/session-end/wiki-foreground-bootstrap.ts",
       "src/hooks/session-end/worker.ts",
       "src/hooks/setup/README.md",
       "src/hooks/setup/__tests__/prune.test.ts",
@@ -6792,7 +6790,6 @@
       "src/hooks/session-end/__tests__/spawn-next.test.ts",
       "src/hooks/session-end/__tests__/subdirectory-cwd.test.ts",
       "src/hooks/session-end/__tests__/team-cleanup.test.ts",
-      "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
       "src/hooks/session-end/__tests__/worker.test.ts",
       "src/hooks/session-end/action-runner.ts",
       "src/hooks/session-end/action-watchdog.ts",
@@ -6805,7 +6802,6 @@
       "src/hooks/session-end/index.ts",
       "src/hooks/session-end/routing.ts",
       "src/hooks/session-end/spawn-next.ts",
-      "src/hooks/session-end/wiki-foreground-bootstrap.ts",
       "src/hooks/session-end/worker.ts",
       "src/hooks/setup/README.md",
       "src/hooks/setup/__tests__/prune.test.ts",
@@ -42101,11 +42097,6 @@
         "path": "src/hooks/session-end/__tests__/team-cleanup.test.ts"
       },
       {
-        "id": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "kind": "hook",
-        "path": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts"
-      },
-      {
         "id": "src/hooks/session-end/__tests__/worker.test.ts",
         "kind": "hook",
         "path": "src/hooks/session-end/__tests__/worker.test.ts"
@@ -42164,11 +42155,6 @@
         "id": "src/hooks/session-end/spawn-next.ts",
         "kind": "hook",
         "path": "src/hooks/session-end/spawn-next.ts"
-      },
-      {
-        "id": "src/hooks/session-end/wiki-foreground-bootstrap.ts",
-        "kind": "hook",
-        "path": "src/hooks/session-end/wiki-foreground-bootstrap.ts"
       },
       {
         "id": "src/hooks/session-end/worker.ts",
@@ -48174,22 +48160,7 @@
       },
       {
         "from": "scripts/wiki-session-end.mjs",
-        "to": "dist/hooks/session-end/cleanup-manifest.js",
-        "kind": "imports"
-      },
-      {
-        "from": "scripts/wiki-session-end.mjs",
-        "to": "dist/hooks/session-end/worker.js",
-        "kind": "imports"
-      },
-      {
-        "from": "scripts/wiki-session-end.mjs",
-        "to": "dist/hooks/wiki/session-hooks.js",
-        "kind": "imports"
-      },
-      {
-        "from": "scripts/wiki-session-end.mjs",
-        "to": "dist/lib/worktree-paths.js",
+        "to": "dist/hooks/session-end/index.js",
         "kind": "imports"
       },
       {
@@ -68673,46 +68644,6 @@
         "kind": "imports"
       },
       {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "external:child_process",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "external:fs",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "external:os",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "external:path",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "external:vitest",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "src/hooks/session-end/cleanup-manifest.ts",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "src/hooks/session-end/wiki-foreground-bootstrap.ts",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/__tests__/wiki-foreground-bootstrap.test.ts",
-        "to": "src/hooks/session-end/worker.ts",
-        "kind": "imports"
-      },
-      {
         "from": "src/hooks/session-end/__tests__/worker.test.ts",
         "to": "external:node:fs",
         "kind": "imports"
@@ -69029,12 +68960,12 @@
       },
       {
         "from": "src/hooks/session-end/index.ts",
-        "to": "src/hooks/session-end/wiki-foreground-bootstrap.ts",
-        "kind": "exports"
+        "to": "src/hooks/session-end/worker.ts",
+        "kind": "imports"
       },
       {
         "from": "src/hooks/session-end/index.ts",
-        "to": "src/hooks/session-end/worker.ts",
+        "to": "src/hooks/wiki/session-hooks.ts",
         "kind": "imports"
       },
       {
@@ -69134,26 +69065,6 @@
       },
       {
         "from": "src/hooks/session-end/spawn-next.ts",
-        "to": "src/lib/worktree-paths.ts",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/wiki-foreground-bootstrap.ts",
-        "to": "src/hooks/session-end/cleanup-manifest.ts",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/wiki-foreground-bootstrap.ts",
-        "to": "src/hooks/session-end/worker.ts",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/wiki-foreground-bootstrap.ts",
-        "to": "src/hooks/wiki/session-hooks.ts",
-        "kind": "imports"
-      },
-      {
-        "from": "src/hooks/session-end/wiki-foreground-bootstrap.ts",
         "to": "src/lib/worktree-paths.ts",
         "kind": "imports"
       },
@@ -87124,12 +87035,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7701,
-      "edgeCount": 8304,
-      "importEdgeCount": 6870,
+      "nodeCount": 7699,
+      "edgeCount": 8289,
+      "importEdgeCount": 6856,
       "registerEdgeCount": 68
     }
   },
-  "inventorySha256": "8765eccb250057f2b7a9a5bb325e062f3144c7432fd64edf9dddccb277f84089",
-  "manifestSha256": "7d4c85344879655af95501ea0dfca634fe0c85ee324bf2c9878eb103faa8831c"
+  "inventorySha256": "b0d3620aa85361a6b8adf828568a6cc9ab161caf6c6eb75564c5c698316aa02d",
+  "manifestSha256": "2b3eb75e4ab7f910298e0785a8edb73a01dc275424f8a8e50eff7f29b91c23fe"
 }
