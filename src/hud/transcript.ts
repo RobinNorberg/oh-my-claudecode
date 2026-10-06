@@ -65,6 +65,18 @@ const PERMISSION_THRESHOLD_MS = 3000; // 3 seconds
 const pendingPermissionMap = new Map<string, PendingPermission>();
 
 /**
+ * Module-level map tracking pending TaskCreate operations.
+ * Key: tool_use block id, Value: pending TodoItem with partial data
+ * When the corresponding tool_result arrives with task ID, finalize the item.
+ */
+interface PendingTaskCreate {
+  content: string;
+  activeForm?: string;
+  status: TodoItem["status"];
+}
+const pendingTaskCreateMap = new Map<string, PendingTaskCreate>();
+
+/**
  * Content block types that indicate extended thinking mode.
  */
 const THINKING_PART_TYPES = ["thinking", "reasoning"] as const;
@@ -347,6 +359,26 @@ function readTailLines(
 type BackgroundAgentMap = Map<string, string>;
 
 /**
+ * Extract task ID from TaskCreate tool_result.
+ * Looks for patterns like "Task #123 created" in the result content.
+ */
+function extractTaskIdFromTaskCreateResult(
+  content: string | Array<{ type?: string; text?: string }>,
+): string | null {
+  let text = "";
+  if (typeof content === "string") {
+    text = content;
+  } else if (Array.isArray(content) && content.length > 0) {
+    const firstBlock = content[0] as { text?: string };
+    if (firstBlock?.text) {
+      text = firstBlock.text;
+    }
+  }
+  const match = /Task #([^\s]+)\s+created/.exec(text);
+  return match ? match[1] : null;
+}
+
+/**
  * Extract background agent ID from "Async agent launched" message
  */
 function extractBackgroundAgentId(
@@ -589,7 +621,7 @@ function processEntry(
       } else if (block.name === "TodoWrite" || block.name === "proxy_TodoWrite") {
         const input = block.input as TodoWriteInput | undefined;
         if (input?.todos && Array.isArray(input.todos)) {
-          // Replace latest todos with new ones
+          // Replace latest todos with new ones; Task tools apply on top
           latestTodos.length = 0;
           latestTodos.push(
             ...input.todos.map((t) => ({
@@ -598,6 +630,49 @@ function processEntry(
               activeForm: t.activeForm,
             })),
           );
+        }
+      } else if (block.name === "TaskCreate" || block.name === "proxy_TaskCreate") {
+        const input = block.input as TaskCreateInput | undefined;
+        if (input?.subject) {
+          // TaskCreate input has subject/description but no id yet.
+          // Hold pending by tool_use id; on tool_result, extract id and finalize.
+          pendingTaskCreateMap.set(block.id, {
+            content: input.activeForm || input.subject,
+            activeForm: input.activeForm,
+            status: (input.status as TodoItem["status"]) || "pending",
+          });
+        }
+      } else if (block.name === "TaskUpdate" || block.name === "proxy_TaskUpdate") {
+        const input = block.input as TaskUpdateInput | undefined;
+        if (input?.taskId) {
+          // TaskUpdate applies incremental changes: status, subject, activeForm
+          // Status "deleted" removes the item; unknown ids are ignored gracefully.
+          // Note: we match by taskId but in this HUD we display by content.
+          // In a full implementation, we'd maintain a taskId -> TodoItem map.
+          if (input.status === "deleted") {
+            // Search for todo to delete (simplified: find by subject if provided)
+            if (input.subject) {
+              const idx = latestTodos.findIndex((t) => t.content === input.subject);
+              if (idx >= 0) {
+                latestTodos.splice(idx, 1);
+              }
+            }
+            // If no subject, skip (can't identify which todo to delete without ID tracking)
+          } else {
+            // For simplicity, find existing todo by subject (or create behavior)
+            // In practice, OMC would maintain a taskId -> index map
+            if (input.subject) {
+              const existing = latestTodos.find((t) => t.content === input.subject || t.content === input.activeForm);
+              if (existing) {
+                if (input.status) existing.status = input.status as TodoItem["status"];
+                if (input.activeForm) existing.activeForm = input.activeForm;
+                // Update content to activeForm if provided, else keep subject
+                if (input.activeForm || input.subject) {
+                  existing.content = input.activeForm || input.subject;
+                }
+              }
+            }
+          }
         }
       } else if (block.name === "Skill" || block.name === "proxy_Skill") {
         result.skillCallCount++;
@@ -626,10 +701,26 @@ function processEntry(
       }
     }
 
-    // Track tool_result to mark agents as completed
+    // Track tool_result to mark agents as completed and finalize TaskCreate operations
     if (block.type === "tool_result" && block.tool_use_id) {
       // Clear from pending permissions when tool_result arrives
       pendingPermissionMap.delete(block.tool_use_id);
+
+      // Handle TaskCreate tool_result: extract task ID from response and finalize todo
+      const pendingTask = pendingTaskCreateMap.get(block.tool_use_id);
+      if (pendingTask && block.content && !block.is_error) {
+        // Parse "Task #<id> created" from tool_result content
+        const taskIdMatch = extractTaskIdFromTaskCreateResult(block.content);
+        if (taskIdMatch) {
+          // Finalize the pending task and add to todos
+          latestTodos.push(pendingTask);
+        }
+        // Remove from pending whether successful or not (error results don't add)
+        pendingTaskCreateMap.delete(block.tool_use_id);
+      } else if (pendingTask && block.is_error) {
+        // TaskCreate error: don't add to todos, just clean up
+        pendingTaskCreateMap.delete(block.tool_use_id);
+      }
 
       const agent = agentMap.get(block.tool_use_id);
       if (agent) {
@@ -761,6 +852,21 @@ interface TodoWriteInput {
 interface SkillInput {
   skill: string;
   args?: string;
+}
+
+interface TaskCreateInput {
+  subject?: string;
+  description?: string;
+  activeForm?: string;
+  status?: string;
+}
+
+interface TaskUpdateInput {
+  taskId: string;
+  status?: string;
+  subject?: string;
+  description?: string;
+  activeForm?: string;
 }
 
 
