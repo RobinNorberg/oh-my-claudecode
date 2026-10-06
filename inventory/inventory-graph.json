@@ -5,15 +5,15 @@
   "provenance": {
     "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
     "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-    "head": "f6c32f23b0696454b8e26be062b6968294a5383d",
-    "sourceSha256": "33a346d3b8b04f52a2467ddcde2f89119f1a7aff433a3c0f8656f34450dae10a",
+    "head": "ba0c67c2fe0c78453dac198b95fdf72bc21fc853",
+    "sourceSha256": "792eab87889f46752d8b9e8dd6d2134484edd935e125dc8e0ff1099aee7b917c",
     "generatedAt": null,
     "generator": "scripts/generate-inventory-graph.mjs"
   },
   "base": "05c800f40d1ad53b42a78609d2667ef4f726808b",
   "planningHead": "0a91273e61dbbd47eb0af4c02844409251e08398",
-  "head": "f6c32f23b0696454b8e26be062b6968294a5383d",
-  "sourceSha256": "33a346d3b8b04f52a2467ddcde2f89119f1a7aff433a3c0f8656f34450dae10a",
+  "head": "ba0c67c2fe0c78453dac198b95fdf72bc21fc853",
+  "sourceSha256": "792eab87889f46752d8b9e8dd6d2134484edd935e125dc8e0ff1099aee7b917c",
   "counts": {
     "public": {
       "skills": 47,
@@ -32,9 +32,9 @@
       "total": 1464
     },
     "generated": {
-      "distFiles": 5615,
+      "distFiles": 5611,
       "bridgeFiles": 9,
-      "total": 5624
+      "total": 5620
     },
     "prompt": {
       "promptLikeFiles": 61
@@ -4150,10 +4150,6 @@
       "dist/hooks/session-end/spawn-next.d.ts.map",
       "dist/hooks/session-end/spawn-next.js",
       "dist/hooks/session-end/spawn-next.js.map",
-      "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts",
-      "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts.map",
-      "dist/hooks/session-end/wiki-foreground-bootstrap.js",
-      "dist/hooks/session-end/wiki-foreground-bootstrap.js.map",
       "dist/hooks/session-end/worker.d.ts",
       "dist/hooks/session-end/worker.d.ts.map",
       "dist/hooks/session-end/worker.js",
@@ -24228,26 +24224,6 @@
         "id": "dist/hooks/session-end/spawn-next.js.map",
         "kind": "generated-dist",
         "path": "dist/hooks/session-end/spawn-next.js.map"
-      },
-      {
-        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts",
-        "kind": "generated-dist",
-        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts"
-      },
-      {
-        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts.map",
-        "kind": "generated-dist",
-        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.d.ts.map"
-      },
-      {
-        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.js",
-        "kind": "generated-dist",
-        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.js"
-      },
-      {
-        "id": "dist/hooks/session-end/wiki-foreground-bootstrap.js.map",
-        "kind": "generated-dist",
-        "path": "dist/hooks/session-end/wiki-foreground-bootstrap.js.map"
       },
       {
         "id": "dist/hooks/session-end/worker.d.ts",
@@ -48198,7 +48174,22 @@
       },
       {
         "from": "scripts/wiki-session-end.mjs",
-        "to": "dist/hooks/session-end/wiki-foreground-bootstrap.js",
+        "to": "dist/hooks/session-end/cleanup-manifest.js",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/wiki-session-end.mjs",
+        "to": "dist/hooks/session-end/worker.js",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/wiki-session-end.mjs",
+        "to": "dist/hooks/wiki/session-hooks.js",
+        "kind": "imports"
+      },
+      {
+        "from": "scripts/wiki-session-end.mjs",
+        "to": "dist/lib/worktree-paths.js",
         "kind": "imports"
       },
       {
@@ -87133,12 +87124,12 @@
       }
     ],
     "stats": {
-      "nodeCount": 7705,
-      "edgeCount": 8301,
-      "importEdgeCount": 6867,
+      "nodeCount": 7701,
+      "edgeCount": 8304,
+      "importEdgeCount": 6870,
       "registerEdgeCount": 68
     }
   },
   "inventorySha256": "8765eccb250057f2b7a9a5bb325e062f3144c7432fd64edf9dddccb277f84089",
-  "manifestSha256": "626bf3285a574b5f35e0f3b2db05001f3088fa7c62ff469a8034edae5c299006"
+  "manifestSha256": "7d4c85344879655af95501ea0dfca634fe0c85ee324bf2c9878eb103faa8831c"
 }
